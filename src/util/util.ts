@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { useGlobalContext } from "../context/context";
 
 // global variables
@@ -46,7 +47,7 @@ export function getMonth(month = dayjs().month()) {
   return daysMatrix;
 }
 
-export function getProperSelectedDays(pSelDaysArray, pDaysArrayLength) {
+export function getProperSelectedDays(pSelDaysArray:Dayjs[] | Dayjs, pDaysArrayLength?:number) {
   let daysMatrix = [];
   let index = -1;
 

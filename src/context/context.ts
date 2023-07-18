@@ -1,6 +1,10 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 import React, {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  createContext,
   useContext,
   useEffect,
   useMemo,
@@ -20,7 +24,7 @@ export const labelsClasses = [
   "purple",
 ];
 
-function groupsReducer(state, { type, payload }) {
+function groupsReducer(state:Group, { type, payload}) {
   switch (type) {
     case "push":
       return [...state, payload];
@@ -76,22 +80,87 @@ function initEvents() {
   return parsedEvents;
 }
 
-const GlobalContext = React.createContext();
 
-const GlobalContextProvider = ({ children }) => {
+
+// INTERFACES START
+interface GlobalContextProps {
+  tooltipTitle: string
+  setTooltipTitle: Dispatch<SetStateAction<string>>
+  tooltipRefElement: HTMLElement | null
+  setTooltipRefElement: Dispatch<SetStateAction<HTMLElement | null>>
+  showTooltip: boolean
+  setShowTooltip: Dispatch<SetStateAction<boolean>>
+  monthIndex: number
+  setMonthIndex: Dispatch<SetStateAction<number>>
+  showSidebar: boolean
+  setShowSidebar: Dispatch<SetStateAction<boolean>>
+  selectedEvent: Event | null
+  setSelectedEvent: Dispatch<SetStateAction<Event | null>>
+  selectedGroup: Group | null
+  setSelectedGroup: Dispatch<SetStateAction<Group | null>>
+  showEventModal: boolean
+  setShowEventModal: Dispatch<SetStateAction<boolean>>
+  changeShowEventModal: () => void
+  showGroupModal: boolean
+  changeShowGroupModal: Dispatch<SetStateAction<boolean>>
+  chosenDayForTask: Dayjs
+  setChosenDayForTask: Dispatch<SetStateAction<Dayjs>>
+  showConfirmationWin: boolean
+  setShowConfirmationWin: Dispatch<SetStateAction<boolean>>
+  confirmationWindowTitle: string
+  setConfirmationWindowTitle: Dispatch<SetStateAction<string>>
+  showCancelButton: boolean
+  setShowCancelButton: Dispatch<SetStateAction<boolean>>
+  //TODO: define object
+  objectForAction: any
+  setObjectForAction: Dispatch<SetStateAction<any>>
+  savedGroups: Group[]
+  setSavedGroups: Dispatch<SetStateAction<Group[]>>
+  referenceElement: HTMLElement | null
+  setReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>
+  groupReferenceElement: HTMLElement | null
+  setGroupReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>
+  showFakeTask: boolean
+  setShowFakeTask: Dispatch<SetStateAction<boolean>>
+  savedEvents: Event[]
+  filteredEvents: Event[]
+  selectedDaysArray: Dayjs[]
+  setSelectedDaysArray: Dispatch<SetStateAction<Dayjs[]>>
+  chosenDay: Dayjs
+  setChosenDay: Dispatch<SetStateAction<Dayjs>>
+  selectedGroupLabel: string
+  setSelectedGroupLabel: Dispatch<SetStateAction<string>>
+  modalRef: MutableRefObject<HTMLElement | null>
+  groupModalRef: MutableRefObject<HTMLElement | null>
+}
+
+interface Group {
+
+}
+
+interface Event {
+
+}
+// INTERFACES END
+
+
+//const GlobalContext = React.createContext();
+export const GlobalContext = createContext<GlobalContextProps | undefined>(undefined,);
+
+export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   // tooltip
   const [tooltipTitle, setTooltipTitle] = useState("");
-  const [tooltipRefElement, setTooltipRefElement] = useState(null);
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipRefElement, setTooltipRefElement] = useState<HTMLElement | null>(null);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
   // tooltip
 
-  const [monthIndex, setMonthIndex] = useState(dayjs().month() + 1);
+  const [monthIndex, setMonthIndex] = useState<number>(dayjs().month() + 1);
 
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState<boolean>(true);
 
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
 
   const {
     show: showEventModal,
@@ -109,44 +178,11 @@ const GlobalContextProvider = ({ children }) => {
   const [chosenDayForTask, setChosenDayForTask] = useState(dayjs());
 
   // confirmation window start
-  const [showConfirmationWin, setShowConfirmationWin] = useState(false);
-  const [confirmationWindowTitle, setConfirmationWindowTitle] = useState("");
-  const [showCancelButton, setShowCancelButton] = useState(true);
+  const [showConfirmationWin, setShowConfirmationWin] = useState<boolean>(false);
+  const [confirmationWindowTitle, setConfirmationWindowTitle] = useState<string>("");
+  const [showCancelButton, setShowCancelButton] = useState<boolean>(true);
   const [objectForAction, setObjectForAction] = useState({});
 
-  //const [confirm, setConfirm] = useState(null);
-  //const [passedAction, setPassedAction] = useState(
-  //  () => () => console.log("defaultPassedAction")
-  //);
-
-  //function confirmAction(pTitle) {
-  //  setShowCancelButton(true);
-  //  setConfirmationWindowTitle(pTitle);
-  //  setShowConfirmationWin(true);
-  //
-  //  let res = null;
-
-  // setTimeout(() => {
-  //   if (res !== true || res === null) {
-  //     setShowCancelButton(false);
-  //     setConfirmationWindowTitle("");
-  //     setShowConfirmationWin(false);
-  //    res = false;
-  //   }
-  // }, 5000);
-
-  // res = confirm;
-  // console.log(res);
-  // return res;
-  // }
-
-  // code function below
-  // function getConfirmationWindow(pTitle, numOfButtons) {
-  //   setConfirmationWindowTitle(pTitle);
-
-  //   setShowConfirmationWin(true);
-  // }
-  // confirmation window end
 
   // groups
   const [savedGroups, dispatchGroups] = useReducer(
@@ -156,8 +192,8 @@ const GlobalContextProvider = ({ children }) => {
   );
 
   // POPPER
-  const [referenceElement, setReferenceElement] = useState(null);
-  const [groupReferenceElement, setGroupReferenceElement] = useState(null);
+  const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(null);
+  const [groupReferenceElement, setGroupReferenceElement] = useState<HTMLElement | null>(null);
   // const [popperElement, setPopperElement] = useState(null);
 
   // Fake Task
@@ -197,30 +233,11 @@ const GlobalContextProvider = ({ children }) => {
     setShowEventModal((visible) => !visible);
   }
 
-  //const [modalObject, setModalObject] = useState({});
-
-  //objectName: 'task',
-  //  title: '',
-  //  description: '',
-  //  label: labelsClasses[0],
-  //  group: savedGroups[0],
-
-  //const [modalTitle, setModalTitle] = useState("");
-  //const [modalDescription, setModalDescription] = useState("");
-  //const [selectedLabel, setSelectedLabel] = useState(labelsClasses[0]);
-
-  //const [showDropdown, setShowDropdown] = useState(false);
-  //const [chosenGroupForTask, setChosenGroupForTask] = useState(savedGroups[0]);
-
-  //const [selectedObjectForModal, setSelectedObjectForModal] = useState("");
-
-  // Everything for modal END
-
   const [selectedGroupLabel, setSelectedGroupLabel] = useState(
     labelsClasses[0]
   );
 
-  const value = {
+  const value: GlobalContextProps = {
     //tooltip
     tooltipTitle,
     setTooltipTitle,
@@ -286,13 +303,14 @@ const GlobalContextProvider = ({ children }) => {
   };
 
   return (
-    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
-  );
-};
+    <GlobalContext.Provider value={value}>{props.children}</GlobalContext.Provider>
+  )
+}
+
 
 export const useGlobalContext = () => {
   return useContext(GlobalContext);
 };
 
-export { GlobalContext, GlobalContextProvider };
+//export { GlobalContext, GlobalContextProvider };
 

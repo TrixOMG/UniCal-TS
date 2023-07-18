@@ -74,7 +74,7 @@ const GroupModal = () => {
     setEditMode(false);
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e:any) {
     e.preventDefault();
 
     if (title.trim() === "") return;
@@ -100,7 +100,7 @@ const GroupModal = () => {
     return showGroupModal ? "visible" : "invisible";
   }
 
-  function handleDelete(e, pGroup) {
+  function handleDelete(e:any, pGroup) {
     e.preventDefault();
 
     if (savedGroups.length < 1) {
