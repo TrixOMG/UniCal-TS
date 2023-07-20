@@ -24,64 +24,6 @@ export const labelsClasses = [
   "purple",
 ];
 
-function groupsReducer(state:Group, { type, payload}) {
-  switch (type) {
-    case "push":
-      return [...state, payload];
-    case "update":
-      return state.map((group) => (group.id === payload.id ? payload : group));
-    case "delete":
-      // change
-      return state.filter((group) => group.id !== payload.id);
-    default:
-      throw new Error("groupsReducerError");
-  }
-}
-
-function initGroups() {
-  const storageGroups = localStorage.getItem("savedGroups");
-  let parsedGroups = null;
-
-  if (storageGroups !== null) parsedGroups = JSON.parse(storageGroups);
-  else
-    parsedGroups = [
-      {
-        title: "Your Default Group",
-        id: Date.now(),
-        description: "Your Default Group's Description",
-        checked: true,
-        label: labelsClasses[0],
-      },
-    ];
-  return parsedGroups;
-}
-
-function savedEventsReducer(state, { type, payload }) {
-  switch (type) {
-    case "push":
-      return [...state, payload];
-    case "update":
-      return state.map((evt) => (evt.id === payload.id ? payload : evt));
-    case "delete":
-      return state.filter((evt) => evt.id !== payload.id);
-    case "pushFromStart":
-      return [payload, ...state];
-    default:
-      throw new Error("eventsReducerError");
-  }
-}
-
-function initEvents() {
-  const storageEvents = localStorage.getItem("savedEvents");
-  let parsedEvents = [];
-
-  if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
-  else parsedEvents = [];
-  return parsedEvents;
-}
-
-
-
 // INTERFACES START
 interface GlobalContextProps {
   tooltipTitle: string
@@ -132,16 +74,103 @@ interface GlobalContextProps {
   setSelectedGroupLabel: Dispatch<SetStateAction<string>>
   modalRef: MutableRefObject<HTMLElement | null>
   groupModalRef: MutableRefObject<HTMLElement | null>
+  // dispatchCalEvent: Dispatch<SetStateAction<{type: string; payload: Event}>>
 }
 
 interface Group {
-
+  checked: boolean
+  title: string
+  description: string 
+  label: string
+  id: number //?
 }
 
 interface Event {
+  title: string
+  description: string 
+  label: string
+  day: number
+  id: number
+  groupId: number
+  done: boolean
+}
+
+interface Action {
+  type: string
+  payload: Group | Event
+}
+
+interface EventReducerInterface {
 
 }
+
+// interface GroupReducerInterface {
+//   groupsReducer: (state:Group[], action:Action) => Group[] 
+//   array: []
+//   initGroups: () => Group[]
+
+// }
+interface GroupReducerInterface {
+
+}
+
 // INTERFACES END
+
+function groupsReducer(state:Group[], action:Action) {
+  switch (action.type) {
+    case "push":
+      return [...state, action.payload];
+    case "update":
+      return state.map((group) => (group.id === action.payload.id ? action.payload : group));
+    case "delete":
+      // change
+      return state.filter((group) => group.id !== action.payload.id);
+    default:
+      throw new Error("groupsReducerError");
+  }
+}
+
+function initGroups() {
+  const storageGroups = localStorage.getItem("savedGroups");
+  let parsedGroups = null;
+
+  if (storageGroups !== null) parsedGroups = JSON.parse(storageGroups);
+  else
+    parsedGroups = [
+      {
+        title: "Your Default Group",
+        id: Date.now(),
+        description: "Your Default Group's Description",
+        checked: true,
+        label: labelsClasses[0],
+      },
+    ];
+  return parsedGroups;
+}
+
+function savedEventsReducer(state: Event[], action: Action) {
+  switch (action.type) {
+    case "push":
+      return [...state, action.payload];
+    case "update":
+      return state.map((evt) => (evt.id === action.payload.id ? action.payload : evt));
+    case "delete":
+      return state.filter((evt) => evt.id !== action.payload.id);
+    case "pushFromStart":
+      return [action.payload, ...state];
+    default:
+      throw new Error("eventsReducerError");
+  }
+}
+
+function initEvents() {
+  const storageEvents = localStorage.getItem("savedEvents");
+  let parsedEvents = [];
+
+  if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
+  else parsedEvents = [];
+  return parsedEvents;
+}
 
 
 //const GlobalContext = React.createContext();
@@ -185,11 +214,8 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
 
   // groups
-  const [savedGroups, dispatchGroups] = useReducer(
-    groupsReducer,
-    [],
-    initGroups
-  );
+  const [savedGroups, dispatchGroups] = useReducer(groupsReducer, initGroups);
+    // [],
 
   // POPPER
   const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(null);
@@ -201,15 +227,15 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
   const [savedEvents, dispatchCalEvent] = useReducer(
     savedEventsReducer,
-    [],
+    // [],
     initEvents
   );
 
   const filteredEvents = useMemo(() => {
-    return savedEvents.filter((evt) =>
+    return savedEvents.filter((evt:Event) =>
       savedGroups
-        .filter((group) => group.checked)
-        .map((group) => group.id)
+        .filter((group:Group) => group.checked)
+        .map((group:Group) => group.id)
         .includes(evt.groupId)
     );
   }, [savedEvents, savedGroups]);
@@ -300,7 +326,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     setReferenceElement,
     showFakeTask,
     setShowFakeTask,
-  };
+  }
 
   return (
     <GlobalContext.Provider value={value}>{props.children}</GlobalContext.Provider>
