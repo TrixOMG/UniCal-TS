@@ -7,7 +7,7 @@ import MainDaysComponent from "./components/MainDaysComponent";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { useGlobalContext } from "./context/context";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import "./index.css";
 import "./util/util";
 

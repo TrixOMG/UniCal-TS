@@ -19,7 +19,7 @@ const EventModal = () => {
     savedGroups,
     selectedEvent,
     setSelectedEvent,
-  } = useGlobalContext();
+  } = useGlobalContext()
 
   const [title, setTitle] = useState(selectedEvent ? selectedEvent.title : "");
   const [description, setDescription] = useState(

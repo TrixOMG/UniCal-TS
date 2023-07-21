@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import React, {
   Dispatch,
   MutableRefObject,
+  Reducer,
   SetStateAction,
   createContext,
   useContext,
@@ -25,7 +26,7 @@ export const labelsClasses = [
 ];
 
 // INTERFACES START
-interface GlobalContextProps {
+export interface GlobalContextProps {
   tooltipTitle: string
   setTooltipTitle: Dispatch<SetStateAction<string>>
   tooltipRefElement: HTMLElement | null
@@ -57,7 +58,6 @@ interface GlobalContextProps {
   objectForAction: any
   setObjectForAction: Dispatch<SetStateAction<any>>
   savedGroups: Group[]
-  setSavedGroups: Dispatch<SetStateAction<Group[]>>
   referenceElement: HTMLElement | null
   setReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>
   groupReferenceElement: HTMLElement | null
@@ -74,10 +74,11 @@ interface GlobalContextProps {
   setSelectedGroupLabel: Dispatch<SetStateAction<string>>
   modalRef: MutableRefObject<HTMLElement | null>
   groupModalRef: MutableRefObject<HTMLElement | null>
-  // dispatchCalEvent: Dispatch<SetStateAction<{type: string; payload: Event}>>
+  dispatchCalEvent: Dispatch<EventAction>
+  dispatchGroups: Dispatch<GroupAction>
 }
 
-interface Group {
+export interface Group {
   checked: boolean
   title: string
   description: string 
@@ -85,7 +86,7 @@ interface Group {
   id: number //?
 }
 
-interface Event {
+export interface Event {
   title: string
   description: string 
   label: string
@@ -95,28 +96,21 @@ interface Event {
   done: boolean
 }
 
-interface Action {
-  type: string
-  payload: Group | Event
-}
+type GroupAction =
+  | { type:'push'; payload: Group }
+  | { type: 'update'; payload: Group } 
+  | { type: 'delete'; payload: Group }
 
-interface EventReducerInterface {
+type EventAction =
+  | { type:'push'; payload: Event }
+  | { type: 'update'; payload: Event } 
+  | { type: 'delete'; payload: Event }
+  | { type: 'pushFromStart'; payload: Event }
 
-}
-
-// interface GroupReducerInterface {
-//   groupsReducer: (state:Group[], action:Action) => Group[] 
-//   array: []
-//   initGroups: () => Group[]
-
-// }
-interface GroupReducerInterface {
-
-}
 
 // INTERFACES END
 
-function groupsReducer(state:Group[], action:Action) {
+const groupsReducer: Reducer<Group[], GroupAction> = (state, action) => {
   switch (action.type) {
     case "push":
       return [...state, action.payload];
@@ -148,7 +142,7 @@ function initGroups() {
   return parsedGroups;
 }
 
-function savedEventsReducer(state: Event[], action: Action) {
+const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
   switch (action.type) {
     case "push":
       return [...state, action.payload];
@@ -172,9 +166,16 @@ function initEvents() {
   return parsedEvents;
 }
 
+// const defaultGroup = {
+//   title: "Your Default Group",
+//   id: Date.now(),
+//   description: "Your Default Group's Description",
+//   checked: true,
+//   label: labelsClasses[0],
+// }
 
 //const GlobalContext = React.createContext();
-export const GlobalContext = createContext<GlobalContextProps | undefined>(undefined,);
+export const GlobalContext = createContext<GlobalContextProps>({} as GlobalContextProps)
 
 export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   // tooltip
@@ -204,7 +205,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   } = useOutsideAlerter(false);
 
   //
-  const [chosenDayForTask, setChosenDayForTask] = useState(dayjs());
+  const [chosenDayForTask, setChosenDayForTask] = useState<Dayjs>(dayjs());
 
   // confirmation window start
   const [showConfirmationWin, setShowConfirmationWin] = useState<boolean>(false);
@@ -214,7 +215,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
 
   // groups
-  const [savedGroups, dispatchGroups] = useReducer(groupsReducer, initGroups);
+  const [savedGroups, dispatchGroups] = useReducer(groupsReducer, [], initGroups);
     // [],
 
   // POPPER
@@ -227,7 +228,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
   const [savedEvents, dispatchCalEvent] = useReducer(
     savedEventsReducer,
-    // [],
+    [],
     initEvents
   );
 
@@ -252,8 +253,6 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     getProperSelectedDays([dayjs()])
   );
   const [chosenDay, setChosenDay] = useState(dayjs());
-
-  // Everything for modal START
 
   function changeShowEventModal() {
     setShowEventModal((visible) => !visible);

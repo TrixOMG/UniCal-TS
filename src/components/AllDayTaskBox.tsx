@@ -1,11 +1,13 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { useGlobalContext } from "../context/context";
-import Event from "./Event";
+import { Event, useGlobalContext } from "../context/context";
+import EventComponent from "./EventComponent";
 
-export const AllDayTaskBox = ({ pDay }) => {
-  const [dayEvents, setDayEvents] = useState([]);
+export const AllDayTaskBox = (props: { pDay: Dayjs }) => {
+  const { pDay } = props
+
+  const [dayEvents, setDayEvents] = useState<Event[]>([]);
   const { filteredEvents } = useGlobalContext();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export const AllDayTaskBox = ({ pDay }) => {
                     draggableId={evt.id + ""}
                   >
                     {(provided) => {
-                      return <Event evt={evt} provided={provided} />;
+                      return <EventComponent evt={evt} provided={provided} />;
                     }}
                   </Draggable>
                 );

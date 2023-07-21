@@ -1,7 +1,10 @@
 import React from "react";
-import { useGlobalContext } from "../context/context";
+import { DraggableProvided } from "react-beautiful-dnd";
+import { Event, Group, useGlobalContext } from "../context/context";
 
-const Event = ({ evt, provided }) => {
+const EventComponent = (props: { evt:Event, provided:DraggableProvided }) => {
+  const {evt, provided} = props
+
   const {
     setReferenceElement,
     savedGroups,
@@ -10,12 +13,12 @@ const Event = ({ evt, provided }) => {
     dispatchCalEvent,
   } = useGlobalContext();
 
-  function handleOnEventClick(pEvent) {
+  function handleOnEventClick(pEvent:Event) {
     setSelectedEvent(pEvent);
     changeShowEventModal(true);
   }
 
-  function handleTaskDone(pEvent) {
+  function handleTaskDone(pEvent:Event) {
     setSelectedEvent(null);
     changeShowEventModal(false);
 
@@ -74,4 +77,4 @@ const Event = ({ evt, provided }) => {
   );
 };
 
-export default Event;
+export default EventComponent;
