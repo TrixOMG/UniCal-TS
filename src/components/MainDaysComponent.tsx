@@ -38,29 +38,36 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
     return rowsClass + " " + colsClass + " ";
   }
 
-  function handleDragEnd({ destination, source, draggableId }) {
+  // interface DragResult {
+  //   destination: DraggableLocation;
+  //   source: DraggableLocation;
+  //   draggableId: DraggableId;
+  // }
+
+  // { destination, source, draggableId }
+  const onDragEnd = (result: any) => {
     // если таск дропнули в место куда его нельзя дропнуть
-    if (!destination) return;
+    if (!result.destination) return;
 
     // если таск дропнули в тот же день где он и был
     if (
-      destination.index === source.index &&
-      destination.droppableId === source.droppableId
+      result.destination.index === result.source.index &&
+      result.destination.droppableId === result.source.droppableId
     ) {
       return;
     }
 
     let draggedEvent = savedEvents.find(
-      (evt) => evt.id === parseInt(draggableId)
+      (evt) => evt.id === parseInt(result.draggableId)
     );
 
     // если таск дропнули в тот же день, но изменили порядок тасков
     if (
-      destination.index !== source.index &&
-      destination.droppableId === source.droppableId
+      result.destination.index !== result.source.index &&
+      result.destination.droppableId === result.source.droppableId
     ) {
       let copySavedEventsOnThisDay = [...savedEvents].filter((evt) => {
-        return evt.day === parseInt(source.droppableId);
+        return evt.day === parseInt(result.source.droppableId);
       });
 
       copySavedEventsOnThisDay.forEach((evt) => {
@@ -68,7 +75,7 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
       });
 
       let event = copySavedEventsOnThisDay.filter((evt) => {
-        return evt.id === parseInt(draggableId);
+        return evt.id === parseInt(result.draggableId);
       });
 
       // Remove from prev items array
@@ -77,7 +84,7 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
       });
 
       // Adding to new items array location
-      copySavedEventsOnThisDay.splice(destination.index, 0, event[0]);
+      copySavedEventsOnThisDay.splice(result.destination.index, 0, event[0]);
 
       // Updating actual values
       copySavedEventsOnThisDay.forEach((evt) => {
@@ -87,13 +94,16 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
 
     // если таск дропнули в другой день
     // + тут меняется его индекс внутри дня
-    if (destination.droppableId !== source.droppableId) {
+    if (result.destination.droppableId !== result.source.droppableId) {
       // удалить актуал таск из сурс дня
+      if (draggedEvent === undefined) return;
+
       dispatchCalEvent({ type: "delete", payload: draggedEvent });
 
       // скопировать таски дест дня
+      if (result.destination === undefined) return;
       let copyDestDayTasks = [...savedEvents].filter((evt) => {
-        return evt.day === parseInt(destination.droppableId);
+        return evt.day === parseInt(result.destination.droppableId);
       });
 
       copyDestDayTasks.forEach((evt) => {
@@ -101,21 +111,21 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
       });
 
       // изменить дату внутри таска на новую (дест)
-      draggedEvent.day = parseInt(destination.droppableId);
+      draggedEvent.day = parseInt(result.destination.droppableId);
 
       // Adding to new items array location
-      copyDestDayTasks.splice(destination.index, 0, draggedEvent);
+      copyDestDayTasks.splice(result.destination.index, 0, draggedEvent);
 
       // Updating actual values
       copyDestDayTasks.forEach((evt) => {
         return dispatchCalEvent({ type: "push", payload: evt });
       });
     }
-  }
+  };
 
   return (
     <div className='flex flex-1 max-h-[100%]'>
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <div
           className={`mx-1 flex-1 grid gap-1 ${
             selectedDaysArray.length > 0

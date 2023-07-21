@@ -28,7 +28,7 @@ const Navbar = () => {
     // change single chosen day on first day of the array
     setChosenDay(newFirstDay);
 
-    return getProperSelectedDays(newFirstDay, selectedDaysArray.length);
+    return getProperSelectedDays([newFirstDay], selectedDaysArray.length);
   }
 
   function handlePrevTimespanChange() {
@@ -43,20 +43,20 @@ const Navbar = () => {
     // change single chosen day on first day of the array
     setChosenDay(newFirstDay);
 
-    return getProperSelectedDays(newFirstDay, selectedDaysArray.length);
+    return getProperSelectedDays([newFirstDay], selectedDaysArray.length);
   }
 
   function handleResetToday() {
     setSelectedDaysArray(
-      getProperSelectedDays(dayjs(), selectedDaysArray.length)
+      getProperSelectedDays([dayjs()], selectedDaysArray.length)
     );
     setChosenDay(dayjs());
     setMonthIndex(dayjs().month() + 1 + Math.random());
   }
 
-  function handleMonthIndexChangeOnSelectedDays(isNext) {
+  function handleMonthIndexChangeOnSelectedDays(isNext: boolean) {
     let pCurrentMonth = getMonth(monthIndex);
-    const oneLevelCurrentMonthArray = [];
+    const oneLevelCurrentMonthArray: string[] = [];
 
     pCurrentMonth.map((week) => {
       return week.map((day) => {
@@ -66,8 +66,8 @@ const Navbar = () => {
 
     let pSelDaysArray = [];
 
-    if (isNext) pSelDaysArray = handleNextTimespanChange(selectedDaysArray);
-    else pSelDaysArray = handlePrevTimespanChange(selectedDaysArray);
+    if (isNext) pSelDaysArray = handleNextTimespanChange();
+    else pSelDaysArray = handlePrevTimespanChange();
     // middle day of the selectedDays array
     let middleDayIndex = 0;
 

@@ -1,5 +1,4 @@
 import { Dayjs } from "dayjs";
-import { useGlobalContext } from "../context/context";
 
 // global variables
 const dayjs = require("dayjs");
@@ -47,27 +46,27 @@ export function getMonth(month = dayjs().month()) {
   return daysMatrix;
 }
 
-export function getProperSelectedDays(pSelDaysArray:Dayjs[] | Dayjs, pDaysArrayLength?:number) {
+export function getProperSelectedDays(pSelDaysArray:Dayjs[], pDaysArrayLength?:number) {
   let daysMatrix = [];
   let index = -1;
 
   // действия в случае когда юзер просто хочет поменять начало временного промежутка (первый день)
   if (pDaysArrayLength) {
     if (pDaysArrayLength > 7) {
-      if (pSelDaysArray.day() === 0) {
+      if (pSelDaysArray[0].day() === 0) {
         pSelDaysArray = dayjs(
           new Date(
-            pSelDaysArray.year(),
-            pSelDaysArray.month(),
-            pSelDaysArray.date() - 6
+            pSelDaysArray[0].year(),
+            pSelDaysArray[0].month(),
+            pSelDaysArray[0].date() - 6
           )
         );
       } else {
         pSelDaysArray = dayjs(
           new Date(
-            pSelDaysArray.year(),
-            pSelDaysArray.month(),
-            pSelDaysArray.date() - (pSelDaysArray.day() - 1)
+            pSelDaysArray[0].year(),
+            pSelDaysArray[0].month(),
+            pSelDaysArray[0].date() - (pSelDaysArray[0].day() - 1)
           )
         );
       }
@@ -78,9 +77,9 @@ export function getProperSelectedDays(pSelDaysArray:Dayjs[] | Dayjs, pDaysArrayL
         index++;
         return dayjs(
           new Date(
-            pSelDaysArray.year(),
-            pSelDaysArray.month(),
-            pSelDaysArray.date() + index
+            pSelDaysArray[0].year(),
+            pSelDaysArray[0].month(),
+            pSelDaysArray[0].date() + index
           )
         );
       });
@@ -172,7 +171,38 @@ export function getProperSelectedDays(pSelDaysArray:Dayjs[] | Dayjs, pDaysArrayL
         );
       }
     });
-  // daysMatrix = Array(timespanLength)
+
+  return daysMatrix;
+}
+ 
+export function getProperTimespanInMain(pTimespan:Dayjs[]) {
+  pTimespan = [...pTimespan].sort((a, b) => {
+    return dayjs(a).isAfter(dayjs(b)) ? 1 : -1;
+  });
+
+  let rows = 0;
+  let cols = 7;
+
+  if (pTimespan.length <= 7) {
+    rows = 1;
+    cols = pTimespan.length;
+  } else if (pTimespan.length > 7) {
+    rows = pTimespan.length / 7;
+  }
+
+  let index = -1;
+  const daysMatrix = new Array(rows).fill([]).map(() => {
+    return new Array(cols).fill(null).map(() => {
+      index++;
+      return pTimespan[index];
+    });
+  });
+
+  return daysMatrix;
+}
+
+
+ // daysMatrix = Array(timespanLength)
   // 	.fill([])
   // 	.map(() => {
   // 		index++;
@@ -241,37 +271,6 @@ export function getProperSelectedDays(pSelDaysArray:Dayjs[] | Dayjs, pDaysArrayL
   // 		}
   // 	});
   // }
-
-  return daysMatrix;
-}
-
-export function getProperTimespanInMain(pTimespan) {
-  pTimespan = [...pTimespan].sort((a, b) => {
-    return dayjs(a).isAfter(dayjs(b)) ? 1 : -1;
-  });
-
-  let rows = 0;
-  let cols = 7;
-
-  if (pTimespan.length <= 7) {
-    rows = 1;
-    cols = pTimespan.length;
-  } else if (pTimespan.length > 7) {
-    rows = pTimespan.length / 7;
-  }
-
-  let index = -1;
-  const daysMatrix = new Array(rows).fill([]).map(() => {
-    return new Array(cols).fill(null).map(() => {
-      index++;
-      return pTimespan[index];
-    });
-  });
-
-  // console.log(daysMatrix);
-
-  return daysMatrix;
-}
 
 
 
