@@ -1,17 +1,22 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useGlobalContext } from "../context/context";
 import { getMonth, getProperTimespanInMain } from "../util/util";
 import Day from "./Day";
 
-const MainDaysComponent = ({ timeSpan }) => {
+const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
+  const { timeSpan } = props;
+
   const [properTimespan, setProperTimespan] = useState(
     getMonth(dayjs().month())
   );
 
-  const { selectedDaysArray, savedEvents, dispatchCalEvent } =
-    useGlobalContext();
+  const {
+    selectedDaysArray,
+    savedEvents,
+    dispatchCalEvent,
+  } = useGlobalContext();
 
   useEffect(() => {
     if (timeSpan.length > 0)

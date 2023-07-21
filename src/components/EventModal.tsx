@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
-import { popperConfig } from "../Variables";
+// import { popperConfig } from "../Variables";
 import { labelsClasses, useGlobalContext } from "../context/context";
 import "../index.css";
 import { Dropdown } from "./common/Dropdown";
@@ -19,7 +19,7 @@ const EventModal = () => {
     savedGroups,
     selectedEvent,
     setSelectedEvent,
-  } = useGlobalContext()
+  } = useGlobalContext();
 
   const [title, setTitle] = useState(selectedEvent ? selectedEvent.title : "");
   const [description, setDescription] = useState(
@@ -62,9 +62,53 @@ const EventModal = () => {
   }, [setShowFakeTask, showEventModal]);
 
   // POPPER
-  const [popperElement, setPopperElement] = useState(null);
+  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
+    null
+  );
 
-  const { styles } = usePopper(referenceElement, popperElement, popperConfig);
+  const { styles } = usePopper(referenceElement, popperElement, {
+    placement: "right-start",
+    modifiers: [
+      {
+        name: "offset",
+        options: {
+          offset: [0, 10],
+        },
+      },
+      {
+        name: "preventOverflow",
+        options: {
+          altAxis: true,
+        },
+      },
+      {
+        name: "flip",
+        options: {
+          padding: 50,
+        },
+      },
+      {
+        name: "flip",
+        options: {
+          fallbackPlacements: [
+            // "top",
+            "right",
+            "left",
+            // "top-end",
+            "bottom-end",
+            "left-end",
+            "right-end",
+            "bottom",
+            "right-start",
+            "left-start",
+            "bottom-start",
+            "top-start",
+          ],
+          rootBoundary: "viewport",
+        },
+      },
+    ],
+  });
 
   // POPPER
 
@@ -85,15 +129,16 @@ const EventModal = () => {
     setChosenGroupForTask(savedGroups[0]);
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
 
     if (title.trim() === "") return;
+    if (chosenGroupForTask === undefined) return;
 
     const newTask = {
       title: title,
       description: description,
-      label: selectedLabel,
+      label: selectedLabel ? selectedLabel : "",
       day: selectedEvent ? selectedEvent.day : chosenDayForTask.valueOf(),
       id: selectedEvent ? selectedEvent.id : Date.now(),
       groupId: chosenGroupForTask.id,
@@ -109,8 +154,10 @@ const EventModal = () => {
     setModalDefaults();
   }
 
-  function handleDelete(e) {
+  function handleDelete(e: SyntheticEvent) {
     e.preventDefault();
+
+    if (selectedEvent === null) return;
 
     dispatchCalEvent({
       type: "delete",
@@ -124,8 +171,11 @@ const EventModal = () => {
     setModalDefaults();
   }
 
-  function handleDoneUndone(e) {
+  function handleDoneUndone(e: SyntheticEvent) {
     e.preventDefault();
+
+    if (selectedEvent === null) return;
+
     let copySelEvent = selectedEvent;
     copySelEvent.done = !selectedEvent.done;
 
@@ -188,7 +238,7 @@ const EventModal = () => {
                   {
                     savedGroups.find(
                       (group) => group.id === selectedEvent.groupId
-                    ).title
+                    )?.title
                   }
                 </p>
               </div>
@@ -245,13 +295,13 @@ const EventModal = () => {
                 </p>
                 <Icon type={"segment"} />
                 <textarea
-                  type='text'
+                  // type='text'
                   name='description'
                   placeholder='Add a Description'
                   className='border-0 text-gray-600 pb-2 w-full border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 resize-none'
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  maxLength='250'
+                  maxLength={250}
                   rows={2}
                 />
                 <Icon type={"list_alt"} />

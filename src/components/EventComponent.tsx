@@ -1,6 +1,6 @@
 import React from "react";
 import { DraggableProvided } from "react-beautiful-dnd";
-import { Event, Group, useGlobalContext } from "../context/context";
+import { Event, useGlobalContext } from "../context/context";
 
 const EventComponent = (props: { evt:Event, provided:DraggableProvided }) => {
   const {evt, provided} = props
@@ -57,11 +57,11 @@ const EventComponent = (props: { evt:Event, provided:DraggableProvided }) => {
           onChange={() => handleTaskDone(evt)}
           className={`form-checkbox h-4 w-4 mx-1 text-${
             savedGroups.find((gr) => gr.id === evt.groupId)
-              ? savedGroups.find((gr) => gr.id === evt.groupId).label
+              ? savedGroups.find((gr) => gr.id === evt.groupId)?.label
               : ""
           }-400 rounded ring-0 focus:ring-offset-0 focus:ring-0 cursor-pointer border-0 bg-${
             savedGroups.find((gr) => gr.id === evt.groupId)
-              ? savedGroups.find((gr) => gr.id === evt.groupId).label
+              ? savedGroups.find((gr) => gr.id === evt.groupId)?.label
               : ""
           }-400`}
         />

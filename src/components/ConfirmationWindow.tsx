@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import Variables from "../Variables";
 import { useGlobalContext } from "../context/context";
 
@@ -26,7 +26,7 @@ const ConfirmationWindow = () => {
     setWindowDefaults();
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
     if (objectForAction.name === "group") {
       for (let i = 0; i < savedEvents.length; i++) {

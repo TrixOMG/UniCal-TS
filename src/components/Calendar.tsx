@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/context";
 import { getMonth, getProperSelectedDays } from "../util/util";
@@ -21,7 +21,7 @@ const Calendar = () => {
 
   function handleMonthIndexChangeOnSelectedDays() {
     let pCurrentMonth = getMonth(monthIndex);
-    const oneLevelCurrentMonthArray = [];
+    const oneLevelCurrentMonthArray:string[] = [];
 
     pCurrentMonth.map((week) => {
       return week.map((day) => {
@@ -29,7 +29,7 @@ const Calendar = () => {
       });
     });
 
-    let pSelDaysArray = [];
+    let pSelDaysArray:Dayjs[] = [];
     pSelDaysArray = selectedDaysArray;
     let middleDayIndex = 0;
 
@@ -55,7 +55,7 @@ const Calendar = () => {
     setMonthIndex(monthIndex + 1);
   }
 
-  function getTodayClass(day) {
+  function getTodayClass(day:Dayjs) {
     const sFormat = "DD-MM-YY";
     const today = dayjs().format(sFormat);
     const currDay = day.format(sFormat);
@@ -67,7 +67,7 @@ const Calendar = () => {
     }
   }
 
-  function getChosenDayClass(day) {
+  function getChosenDayClass(day:Dayjs) {
     const sFormat = "DD-MM-YY";
 
     if (day.format(sFormat) === dayjs().format(sFormat)) return "";
@@ -89,7 +89,7 @@ const Calendar = () => {
     }
   }
 
-  function getSelectedDaysClass(pDay) {
+  function getSelectedDaysClass(pDay:Dayjs) {
     const sFormat = "DD-MM-YY";
     const pSelDaysArray =
       selectedDaysArray &&
@@ -135,7 +135,7 @@ const Calendar = () => {
     }
   }
 
-  function handleChangeSelectedDays(pDay) {
+  function handleChangeSelectedDays(pDay:Dayjs) {
     if (isMouseDown) {
       const convertedSelDArr =
         selectedDaysArray &&
@@ -157,20 +157,22 @@ const Calendar = () => {
   }
 
   // TODO: работает нормально, но нужен рефакторинг
-  function handleChangeFirstDay(pDay, DaysArrayLength) {
+  function handleChangeFirstDay(pDay:Dayjs, DaysArrayLength:number) {
     if (DaysArrayLength <= 1) {
-      setSelectedDaysArray([].concat(pDay));
+      // если будут ошибки, то тут было [].concat(pDay)
+      setSelectedDaysArray([pDay]);
       setChosenDay(pDay);
     } else if (DaysArrayLength > 7) {
       if (pDay.format("DD-MM-YY") === chosenDay.format("DD-MM-YY")) {
-        setSelectedDaysArray([].concat(chosenDay));
+      // если будут ошибки, то тут было [].concat(pDay)
+        setSelectedDaysArray([chosenDay]);
       } else {
         setChosenDay(pDay);
         setSelectedDaysArray(getProperSelectedDays(pDay, DaysArrayLength));
       }
     } else if (DaysArrayLength <= 7) {
       if (pDay.format("DD-MM-YY") === chosenDay.format("DD-MM-YY")) {
-        setSelectedDaysArray([].concat(pDay));
+        setSelectedDaysArray([pDay]);
         setChosenDay(pDay);
       } else {
         setChosenDay(pDay);

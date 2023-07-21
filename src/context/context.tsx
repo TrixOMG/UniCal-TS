@@ -27,86 +27,85 @@ export const labelsClasses = [
 
 // INTERFACES START
 export interface GlobalContextProps {
-  tooltipTitle: string
-  setTooltipTitle: Dispatch<SetStateAction<string>>
-  tooltipRefElement: HTMLElement | null
-  setTooltipRefElement: Dispatch<SetStateAction<HTMLElement | null>>
-  showTooltip: boolean
-  setShowTooltip: Dispatch<SetStateAction<boolean>>
-  monthIndex: number
-  setMonthIndex: Dispatch<SetStateAction<number>>
-  showSidebar: boolean
-  setShowSidebar: Dispatch<SetStateAction<boolean>>
-  selectedEvent: Event | null
-  setSelectedEvent: Dispatch<SetStateAction<Event | null>>
-  selectedGroup: Group | null
-  setSelectedGroup: Dispatch<SetStateAction<Group | null>>
-  showEventModal: boolean
-  setShowEventModal: Dispatch<SetStateAction<boolean>>
-  changeShowEventModal: () => void
-  showGroupModal: boolean
-  changeShowGroupModal: Dispatch<SetStateAction<boolean>>
-  chosenDayForTask: Dayjs
-  setChosenDayForTask: Dispatch<SetStateAction<Dayjs>>
-  showConfirmationWin: boolean
-  setShowConfirmationWin: Dispatch<SetStateAction<boolean>>
-  confirmationWindowTitle: string
-  setConfirmationWindowTitle: Dispatch<SetStateAction<string>>
-  showCancelButton: boolean
-  setShowCancelButton: Dispatch<SetStateAction<boolean>>
+  tooltipTitle: string;
+  setTooltipTitle: Dispatch<SetStateAction<string>>;
+  tooltipRefElement: HTMLElement | null;
+  setTooltipRefElement: Dispatch<SetStateAction<HTMLElement | null>>;
+  showTooltip: boolean;
+  setShowTooltip: Dispatch<SetStateAction<boolean>>;
+  monthIndex: number;
+  setMonthIndex: Dispatch<SetStateAction<number>>;
+  showSidebar: boolean;
+  setShowSidebar: Dispatch<SetStateAction<boolean>>;
+  selectedEvent: Event | null;
+  setSelectedEvent: Dispatch<SetStateAction<Event | null>>;
+  selectedGroup: Group | null;
+  setSelectedGroup: Dispatch<SetStateAction<Group | null>>;
+  showEventModal: boolean;
+  setShowEventModal: Dispatch<SetStateAction<boolean>>;
+  changeShowEventModal: (show: boolean) => void;
+  showGroupModal: boolean;
+  changeShowGroupModal: Dispatch<SetStateAction<boolean>>;
+  chosenDayForTask: Dayjs;
+  setChosenDayForTask: Dispatch<SetStateAction<Dayjs>>;
+  showConfirmationWin: boolean;
+  setShowConfirmationWin: Dispatch<SetStateAction<boolean>>;
+  confirmationWindowTitle: string;
+  setConfirmationWindowTitle: Dispatch<SetStateAction<string>>;
+  showCancelButton: boolean;
+  setShowCancelButton: Dispatch<SetStateAction<boolean>>;
   //TODO: define object
-  objectForAction: any
-  setObjectForAction: Dispatch<SetStateAction<any>>
-  savedGroups: Group[]
-  referenceElement: HTMLElement | null
-  setReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>
-  groupReferenceElement: HTMLElement | null
-  setGroupReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>
-  showFakeTask: boolean
-  setShowFakeTask: Dispatch<SetStateAction<boolean>>
-  savedEvents: Event[]
-  filteredEvents: Event[]
-  selectedDaysArray: Dayjs[]
-  setSelectedDaysArray: Dispatch<SetStateAction<Dayjs[]>>
-  chosenDay: Dayjs
-  setChosenDay: Dispatch<SetStateAction<Dayjs>>
-  selectedGroupLabel: string
-  setSelectedGroupLabel: Dispatch<SetStateAction<string>>
-  modalRef: MutableRefObject<HTMLElement | null>
-  groupModalRef: MutableRefObject<HTMLElement | null>
-  dispatchCalEvent: Dispatch<EventAction>
-  dispatchGroups: Dispatch<GroupAction>
+  objectForAction: any;
+  setObjectForAction: Dispatch<SetStateAction<any>>;
+  savedGroups: Group[];
+  referenceElement: HTMLElement | null;
+  setReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>;
+  groupReferenceElement: HTMLElement | null;
+  setGroupReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>;
+  showFakeTask: boolean;
+  setShowFakeTask: Dispatch<SetStateAction<boolean>>;
+  savedEvents: Event[];
+  filteredEvents: Event[];
+  selectedDaysArray: Dayjs[];
+  setSelectedDaysArray: Dispatch<SetStateAction<Dayjs[]>>;
+  chosenDay: Dayjs;
+  setChosenDay: Dispatch<SetStateAction<Dayjs>>;
+  selectedGroupLabel: string;
+  setSelectedGroupLabel: Dispatch<SetStateAction<string>>;
+  modalRef: MutableRefObject<HTMLDivElement | null>;
+  groupModalRef: MutableRefObject<HTMLDivElement | null>;
+  dispatchCalEvent: Dispatch<EventAction>;
+  dispatchGroups: Dispatch<GroupAction>;
 }
 
 export interface Group {
-  checked: boolean
-  title: string
-  description: string 
-  label: string
-  id: number //?
+  checked: boolean;
+  title: string;
+  description: string;
+  label: string;
+  id: number; //?
 }
 
 export interface Event {
-  title: string
-  description: string 
-  label: string
-  day: number
-  id: number
-  groupId: number
-  done: boolean
+  title: string;
+  description: string;
+  label: string;
+  day: number;
+  id: number;
+  groupId: number;
+  done: boolean;
 }
 
 type GroupAction =
-  | { type:'push'; payload: Group }
-  | { type: 'update'; payload: Group } 
-  | { type: 'delete'; payload: Group }
+  | { type: "push"; payload: Group }
+  | { type: "update"; payload: Group }
+  | { type: "delete"; payload: Group };
 
 type EventAction =
-  | { type:'push'; payload: Event }
-  | { type: 'update'; payload: Event } 
-  | { type: 'delete'; payload: Event }
-  | { type: 'pushFromStart'; payload: Event }
-
+  | { type: "push"; payload: Event }
+  | { type: "update"; payload: Event }
+  | { type: "delete"; payload: Event }
+  | { type: "pushFromStart"; payload: Event };
 
 // INTERFACES END
 
@@ -115,14 +114,16 @@ const groupsReducer: Reducer<Group[], GroupAction> = (state, action) => {
     case "push":
       return [...state, action.payload];
     case "update":
-      return state.map((group) => (group.id === action.payload.id ? action.payload : group));
+      return state.map((group) =>
+        group.id === action.payload.id ? action.payload : group
+      );
     case "delete":
       // change
       return state.filter((group) => group.id !== action.payload.id);
     default:
       throw new Error("groupsReducerError");
   }
-}
+};
 
 function initGroups() {
   const storageGroups = localStorage.getItem("savedGroups");
@@ -147,7 +148,9 @@ const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
     case "push":
       return [...state, action.payload];
     case "update":
-      return state.map((evt) => (evt.id === action.payload.id ? action.payload : evt));
+      return state.map((evt) =>
+        evt.id === action.payload.id ? action.payload : evt
+      );
     case "delete":
       return state.filter((evt) => evt.id !== action.payload.id);
     case "pushFromStart":
@@ -155,7 +158,7 @@ const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
     default:
       throw new Error("eventsReducerError");
   }
-}
+};
 
 function initEvents() {
   const storageEvents = localStorage.getItem("savedEvents");
@@ -175,12 +178,17 @@ function initEvents() {
 // }
 
 //const GlobalContext = React.createContext();
-export const GlobalContext = createContext<GlobalContextProps>({} as GlobalContextProps)
+export const GlobalContext = createContext<GlobalContextProps>(
+  {} as GlobalContextProps
+);
 
 export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   // tooltip
   const [tooltipTitle, setTooltipTitle] = useState("");
-  const [tooltipRefElement, setTooltipRefElement] = useState<HTMLElement | null>(null);
+  const [
+    tooltipRefElement,
+    setTooltipRefElement,
+  ] = useState<HTMLElement | null>(null);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   // tooltip
 
@@ -208,19 +216,31 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   const [chosenDayForTask, setChosenDayForTask] = useState<Dayjs>(dayjs());
 
   // confirmation window start
-  const [showConfirmationWin, setShowConfirmationWin] = useState<boolean>(false);
-  const [confirmationWindowTitle, setConfirmationWindowTitle] = useState<string>("");
+  const [showConfirmationWin, setShowConfirmationWin] = useState<boolean>(
+    false
+  );
+  const [confirmationWindowTitle, setConfirmationWindowTitle] = useState<
+    string
+  >("");
   const [showCancelButton, setShowCancelButton] = useState<boolean>(true);
   const [objectForAction, setObjectForAction] = useState({});
 
-
   // groups
-  const [savedGroups, dispatchGroups] = useReducer(groupsReducer, [], initGroups);
-    // [],
+  const [savedGroups, dispatchGroups] = useReducer(
+    groupsReducer,
+    [],
+    initGroups
+  );
+  // [],
 
   // POPPER
-  const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(null);
-  const [groupReferenceElement, setGroupReferenceElement] = useState<HTMLElement | null>(null);
+  const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
+    null
+  );
+  const [
+    groupReferenceElement,
+    setGroupReferenceElement,
+  ] = useState<HTMLElement | null>(null);
   // const [popperElement, setPopperElement] = useState(null);
 
   // Fake Task
@@ -233,10 +253,10 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   );
 
   const filteredEvents = useMemo(() => {
-    return savedEvents.filter((evt:Event) =>
+    return savedEvents.filter((evt: Event) =>
       savedGroups
-        .filter((group:Group) => group.checked)
-        .map((group:Group) => group.id)
+        .filter((group: Group) => group.checked)
+        .map((group: Group) => group.id)
         .includes(evt.groupId)
     );
   }, [savedEvents, savedGroups]);
@@ -325,17 +345,17 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     setReferenceElement,
     showFakeTask,
     setShowFakeTask,
-  }
+  };
 
   return (
-    <GlobalContext.Provider value={value}>{props.children}</GlobalContext.Provider>
-  )
-}
-
+    <GlobalContext.Provider value={value}>
+      {props.children}
+    </GlobalContext.Provider>
+  );
+};
 
 export const useGlobalContext = () => {
   return useContext(GlobalContext);
 };
 
 //export { GlobalContext, GlobalContextProvider };
-

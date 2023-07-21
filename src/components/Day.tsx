@@ -1,10 +1,12 @@
-import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import React, { useRef } from "react";
 import { useGlobalContext } from "../context/context";
 import { AllDayTaskBox } from "./AllDayTaskBox";
 import Timeline from "./timeline/Timeline";
 
-const Day = ({ pDay, rowIdx }) => {
+const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
+  const { pDay, rowIdx } = props;
+
   const {
     setSelectedEvent,
     changeShowEventModal,

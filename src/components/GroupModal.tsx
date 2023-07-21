@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
-import { popperConfig } from "../Variables";
+// import { popperConfig } from "../Variables";
 import { labelsClasses, useGlobalContext } from "../context/context";
 import "../index.css";
 import { Icon } from "./common/Icon";
@@ -54,12 +54,57 @@ const GroupModal = () => {
   }, [showGroupModal]);
 
   // POPPER
-  const [popperElement, setPopperElement] = useState(null);
+  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
+    null
+  );
 
   const { styles } = usePopper(
     groupReferenceElement,
     popperElement,
-    popperConfig
+    // popperConfig
+    {
+      placement: "right-start",
+      modifiers: [
+        {
+          name: "offset",
+          options: {
+            offset: [0, 10],
+          },
+        },
+        {
+          name: "preventOverflow",
+          options: {
+            altAxis: true,
+          },
+        },
+        {
+          name: "flip",
+          options: {
+            padding: 50,
+          },
+        },
+        {
+          name: "flip",
+          options: {
+            fallbackPlacements: [
+              // "top",
+              "right",
+              "left",
+              // "top-end",
+              "bottom-end",
+              "left-end",
+              "right-end",
+              "bottom",
+              "right-start",
+              "left-start",
+              "bottom-start",
+              "top-start",
+            ],
+            rootBoundary: "viewport",
+          },
+        },
+      ],
+    }
   );
 
   // POPPER
@@ -74,10 +119,11 @@ const GroupModal = () => {
     setEditMode(false);
   }
 
-  function handleSubmit(e:any) {
+  function handleSubmit(e: any) {
     e.preventDefault();
 
     if (title.trim() === "") return;
+    if (selectedLabel === undefined) return;
 
     const newGroup = {
       checked: true,
@@ -100,20 +146,21 @@ const GroupModal = () => {
     return showGroupModal ? "visible" : "invisible";
   }
 
-  function handleDelete(e:any, pGroup) {
+  function handleDelete(e: SyntheticEvent) {
     e.preventDefault();
+    if (selectedGroup === null) return;
 
     if (savedGroups.length < 1) {
       //TODO: make a hint 'At least one group is required'
       return;
     } else {
-      if (savedEvents.find((evt) => evt.groupId === pGroup.id)) {
+      if (savedEvents.find((evt) => evt.groupId === selectedGroup.id)) {
         //TODO: передать окну подтверждения функцию, её тип и пэйлоад.
         //(если не выйдет с функцией, вместо неё послать тип удаляемого объекта
         //дальше уже в окне подтверждения разбитаться что с этим всем делать)
         setObjectForAction({
           name: "group",
-          payload: pGroup,
+          payload: selectedGroup,
           type: "delete",
         });
         setConfirmationWindowTitle(
@@ -132,8 +179,9 @@ const GroupModal = () => {
     setModalDefaults();
   }
 
-  function handleCheckedUnchecked(e) {
+  function handleCheckedUnchecked(e: SyntheticEvent) {
     e.preventDefault();
+    if (selectedGroup === null) return;
 
     let copyGroup = selectedGroup;
     copyGroup.checked = !selectedGroup.checked;
@@ -236,13 +284,13 @@ const GroupModal = () => {
                 />
                 <Icon type={"segment"} />
                 <textarea
-                  type='text'
+                  // type='text'
                   name='description'
                   placeholder='Add a Description'
                   className='border-0 text-gray-600 pb-2 w-full border-b-2 border-gray-200 focus:outline-none focus:border-blue-500 resize-none'
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  maxLength='100'
+                  maxLength={100}
                   rows={2}
                 />
                 <Icon type={"bookmark_border"} />

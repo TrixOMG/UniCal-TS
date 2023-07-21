@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export const useOutsideAlerter = (initialValue: boolean) => {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [show, setShow] = useState<boolean>(initialValue);
 
   const handleClickOutside = (event:any) => {

@@ -1,12 +1,24 @@
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
-import { dropdownPopperConfig } from "../../Variables";
+// import { DPDPopperConfig, dropdownPopperConfig } from "../../Variables";
+import { Group } from "../../context/context";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 
-export const Dropdown = ({ dropdownArray, actionFunction, actionResult }) => {
-  const [dropdownPopperRefElement, setDropdownPopperRefElement] =
-    useState(null);
-  const [dropdownPopperElement, setDropdownPopperElement] = useState(null);
+export const Dropdown = (props: {
+  dropdownArray: Group[];
+  actionFunction: (gr: Group) => void;
+  actionResult: Group | undefined;
+}) => {
+  const { dropdownArray, actionFunction, actionResult } = props;
+
+  const [
+    dropdownPopperRefElement,
+    setDropdownPopperRefElement,
+  ] = useState<HTMLElement | null>(null);
+  const [
+    dropdownPopperElement,
+    setDropdownPopperElement,
+  ] = useState<HTMLElement | null>(null);
 
   const {
     show: showDropdown,
@@ -17,7 +29,38 @@ export const Dropdown = ({ dropdownArray, actionFunction, actionResult }) => {
   const { styles: dpdStyles } = usePopper(
     dropdownPopperRefElement,
     dropdownPopperElement,
-    dropdownPopperConfig
+    // dropdownPopperConfig
+    {
+      placement: "bottom",
+      modifiers: [
+        {
+          name: "offset",
+          options: {
+            offset: [0, 5],
+          },
+        },
+        {
+          name: "preventOverflow",
+          options: {
+            altAxis: true,
+          },
+        },
+        {
+          name: "flip",
+          options: {
+            fallbackPlacements: [
+              "top",
+              "bottom",
+              "right",
+              "left",
+              "left-end",
+              "right-end",
+            ],
+            rootBoundary: "viewport",
+          },
+        },
+      ],
+    }
   );
 
   return (
@@ -37,9 +80,9 @@ export const Dropdown = ({ dropdownArray, actionFunction, actionResult }) => {
           }}
         >
           <span
-            className={`bg-${actionResult.label}-500 w-6 h-6 rounded-lg flex items-center justify-center cursor-pointer `}
+            className={`bg-${actionResult?.label}-500 w-6 h-6 rounded-lg flex items-center justify-center cursor-pointer `}
           ></span>
-          {actionResult.title}
+          {actionResult?.title}
         </button>
       </header>
       {showDropdown && (
