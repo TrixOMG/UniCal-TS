@@ -5,7 +5,8 @@ import { Icon } from "./common/Icon";
 const Groups = () => {
   const {
     savedGroups,
-    dispatchGroups,
+    // dispatchGroups,
+    editGroup,
     changeShowGroupModal,
     //showGroupModal,
     //groupModalRef,
@@ -52,16 +53,23 @@ const Groups = () => {
               type='checkbox'
               checked={group.checked}
               onChange={() => {
-                dispatchGroups({
-                  type: "update",
-                  payload: {
-                    title: group.title,
-                    description: group.description,
-                    label: group.label,
-                    id: group.id,
-                    checked: !group.checked,
-                  },
+                editGroup({
+                  title: group.title,
+                  description: group.description,
+                  label: group.label,
+                  id: group.id,
+                  checked: !group.checked,
                 });
+                // dispatchGroups({
+                //   type: "update",
+                //   payload: {
+                //     title: group.title,
+                //     description: group.description,
+                //     label: group.label,
+                //     id: group.id,
+                //     checked: !group.checked,
+                //   },
+                // });
               }}
               className={`form-checkbox h-5 w-5 text-${group.label}-400 rounded focus:ring-0 cursor-pointer bg-${group.label}-400 border-0`}
             />

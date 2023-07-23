@@ -5,9 +5,7 @@ import { useGlobalContext } from "../context/context";
 import { getMonth, getProperTimespanInMain } from "../util/util";
 import Day from "./Day";
 
-const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
-  const { timeSpan } = props;
-
+const MainDaysComponent = () => {
   const [properTimespan, setProperTimespan] = useState(
     getMonth(dayjs().month())
   );
@@ -15,13 +13,17 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
   const {
     selectedDaysArray,
     savedEvents,
-    dispatchCalEvent,
+    // dispatchCalEvent,
+    editEvent,
+    addEvent,
+    deleteEvent,
   } = useGlobalContext();
 
   useEffect(() => {
-    if (timeSpan.length > 0)
-      setProperTimespan(getProperTimespanInMain(timeSpan));
-  }, [timeSpan]);
+    if (selectedDaysArray === undefined) return;
+    if (selectedDaysArray.length > 0)
+      setProperTimespan(getProperTimespanInMain(selectedDaysArray));
+  }, [selectedDaysArray]);
 
   function getDaysGridClasses() {
     let rowsClass = "grid-rows-";
@@ -71,7 +73,8 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
       });
 
       copySavedEventsOnThisDay.forEach((evt) => {
-        return dispatchCalEvent({ type: "delete", payload: evt });
+        // return dispatchCalEvent({ type: "delete", payload: evt });
+        return deleteEvent(evt.id);
       });
 
       let event = copySavedEventsOnThisDay.filter((evt) => {
@@ -88,7 +91,8 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
 
       // Updating actual values
       copySavedEventsOnThisDay.forEach((evt) => {
-        return dispatchCalEvent({ type: "push", payload: evt });
+        return addEvent(evt);
+        // return dispatchCalEvent({ type: "push", payload: evt });
       });
     }
 
@@ -98,7 +102,8 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
       // удалить актуал таск из сурс дня
       if (draggedEvent === undefined) return;
 
-      dispatchCalEvent({ type: "delete", payload: draggedEvent });
+      // dispatchCalEvent({ type: "delete", payload: draggedEvent });
+      deleteEvent(draggedEvent.id);
 
       // скопировать таски дест дня
       if (result.destination === undefined) return;
@@ -107,7 +112,8 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
       });
 
       copyDestDayTasks.forEach((evt) => {
-        return dispatchCalEvent({ type: "delete", payload: evt });
+        // return dispatchCalEvent({ type: "delete", payload: evt });
+        return deleteEvent(evt.id);
       });
 
       // изменить дату внутри таска на новую (дест)
@@ -118,7 +124,8 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
 
       // Updating actual values
       copyDestDayTasks.forEach((evt) => {
-        return dispatchCalEvent({ type: "push", payload: evt });
+        // return dispatchCalEvent({ type: "push", payload: evt });
+        return addEvent(evt);
       });
     }
   };
@@ -127,11 +134,16 @@ const MainDaysComponent = (props: { timeSpan: Dayjs[] }) => {
     <div className='flex flex-1 max-h-[100%]'>
       <DragDropContext onDragEnd={onDragEnd}>
         <div
-          className={`mx-1 flex-1 grid gap-1 ${
-            selectedDaysArray.length > 0
-              ? getDaysGridClasses() + " "
-              : "grid-cols-7 grid-rows-4 "
-          }`}
+          className={`mx-1 flex-1 grid gap-1 
+          
+            // selectedDaysArray?.length > 0
+            // ?
+            // TODO: uncomment function below
+            // getDaysGridClasses()
+
+            // : "grid-cols-7 grid-rows-4 "
+          }
+        `}
         >
           {properTimespan.map((row, i) => (
             <React.Fragment key={i}>

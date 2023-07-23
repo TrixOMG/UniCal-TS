@@ -2,38 +2,48 @@ import React from "react";
 import { DraggableProvided } from "react-beautiful-dnd";
 import { Event, useGlobalContext } from "../context/context";
 
-const EventComponent = (props: { evt:Event, provided:DraggableProvided }) => {
-  const {evt, provided} = props
+const EventComponent = (props: { evt: Event; provided: DraggableProvided }) => {
+  const { evt, provided } = props;
 
   const {
     setReferenceElement,
     savedGroups,
     setSelectedEvent,
     changeShowEventModal,
-    dispatchCalEvent,
+    // dispatchCalEvent,
+    editEvent,
   } = useGlobalContext();
 
-  function handleOnEventClick(pEvent:Event) {
+  function handleOnEventClick(pEvent: Event) {
     setSelectedEvent(pEvent);
     changeShowEventModal(true);
   }
 
-  function handleTaskDone(pEvent:Event) {
+  function handleTaskDone(pEvent: Event) {
     setSelectedEvent(null);
     changeShowEventModal(false);
 
-    dispatchCalEvent({
-      type: "update",
-      payload: {
-        title: pEvent.title,
-        description: pEvent.description,
-        label: pEvent.label,
-        day: pEvent.day,
-        groupId: pEvent.groupId,
-        id: pEvent.id,
-        done: !pEvent.done,
-      },
+    editEvent({
+      title: pEvent.title,
+      description: pEvent.description,
+      label: pEvent.label,
+      day: pEvent.day,
+      groupId: pEvent.groupId,
+      id: pEvent.id,
+      done: !pEvent.done,
     });
+    // dispatchCalEvent({
+    //   type: "update",
+    //   payload: {
+    //     title: pEvent.title,
+    //     description: pEvent.description,
+    //     label: pEvent.label,
+    //     day: pEvent.day,
+    //     groupId: pEvent.groupId,
+    //     id: pEvent.id,
+    //     done: !pEvent.done,
+    //   },
+    // });
   }
 
   return (

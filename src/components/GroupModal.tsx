@@ -12,7 +12,10 @@ const GroupModal = () => {
     groupModalRef,
     groupReferenceElement,
     // setGroupReferenceElement,
-    dispatchGroups,
+    // dispatchGroups,
+    addGroup,
+    editGroup,
+    deleteGroup,
     savedGroups,
     savedEvents,
     selectedGroup,
@@ -134,9 +137,11 @@ const GroupModal = () => {
     };
 
     if (selectedGroup) {
-      dispatchGroups({ type: "update", payload: newGroup });
+      // dispatchGroups({ type: "update", payload: newGroup });
+      editGroup(newGroup);
     } else {
-      dispatchGroups({ type: "push", payload: newGroup });
+      // dispatchGroups({ type: "push", payload: newGroup });
+      addGroup(newGroup);
     }
 
     setModalDefaults();
@@ -186,7 +191,8 @@ const GroupModal = () => {
     let copyGroup = selectedGroup;
     copyGroup.checked = !selectedGroup.checked;
 
-    dispatchGroups({ type: "update", payload: copyGroup });
+    // dispatchGroups({ type: "update", payload: copyGroup });
+    editGroup(copyGroup);
 
     setModalDefaults();
   }

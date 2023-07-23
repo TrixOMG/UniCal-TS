@@ -13,6 +13,8 @@ import React, {
   useState,
 } from "react";
 
+import { useLocalStorage } from "usehooks-ts";
+
 import { useOutsideAlerter } from "../hooks/useOutsideAlerter";
 import { getProperSelectedDays } from "../util/util";
 
@@ -27,6 +29,19 @@ export const labelsClasses = [
 
 // INTERFACES START
 export interface GlobalContextProps {
+  // LOCAL STORAGE START
+
+  savedEvents: Event[];
+  addEvent: (newEvent: Event) => void;
+  pushEvent: (newEvent: Event) => void;
+  editEvent: (editedEvent: Event) => void;
+  deleteEvent: (eventId: number) => void;
+  savedGroups: Group[];
+  addGroup: (newGroup: Group) => void;
+  editGroup: (editedEvent: Group) => void;
+  deleteGroup: (groupId: number) => void;
+
+  // LOCAL STORAGE END
   tooltipTitle: string;
   setTooltipTitle: Dispatch<SetStateAction<string>>;
   tooltipRefElement: HTMLElement | null;
@@ -57,14 +72,14 @@ export interface GlobalContextProps {
   //TODO: define object
   objectForAction: any;
   setObjectForAction: Dispatch<SetStateAction<any>>;
-  savedGroups: Group[];
+  // savedGroups: Group[];
   referenceElement: HTMLElement | null;
   setReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>;
   groupReferenceElement: HTMLElement | null;
   setGroupReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>;
   showFakeTask: boolean;
   setShowFakeTask: Dispatch<SetStateAction<boolean>>;
-  savedEvents: Event[];
+  // savedEvents: Event[];
   filteredEvents: Event[];
   selectedDaysArray: Dayjs[];
   setSelectedDaysArray: Dispatch<SetStateAction<Dayjs[]>>;
@@ -74,8 +89,8 @@ export interface GlobalContextProps {
   setSelectedGroupLabel: Dispatch<SetStateAction<string>>;
   modalRef: MutableRefObject<HTMLDivElement | null>;
   groupModalRef: MutableRefObject<HTMLDivElement | null>;
-  dispatchCalEvent: Dispatch<EventAction>;
-  dispatchGroups: Dispatch<GroupAction>;
+  // dispatchCalEvent: Dispatch<EventAction>;
+  // dispatchGroups: Dispatch<GroupAction>;
 }
 
 export interface Group {
@@ -125,23 +140,24 @@ const groupsReducer: Reducer<Group[], GroupAction> = (state, action) => {
   }
 };
 
-function initGroups() {
-  const storageGroups = localStorage.getItem("savedGroups");
-  let parsedGroups = null;
+// function initGroups() {
+//   const storageGroups = localStorage.getItem("savedGroups");
+//   let parsedGroups = null;
 
-  if (storageGroups !== null) parsedGroups = JSON.parse(storageGroups);
-  else
-    parsedGroups = [
-      {
-        title: "Your Default Group",
-        id: Date.now(),
-        description: "Your Default Group's Description",
-        checked: true,
-        label: labelsClasses[0],
-      },
-    ];
-  return parsedGroups;
-}
+//   if (storageGroups !== null) parsedGroups = JSON.parse(storageGroups);
+//   else
+//     parsedGroups = [
+//       {
+//         title: "Your Default Group",
+//         id: Date.now(),
+//         description: "Your Default Group's Description",
+//         checked: true,
+//         label: labelsClasses[0],
+//       },
+//     ];
+
+//   return parsedGroups;
+// }
 
 const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
   switch (action.type) {
@@ -165,7 +181,18 @@ function initEvents() {
   let parsedEvents = [];
 
   if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
-  else parsedEvents = [];
+  else
+    parsedEvents = [
+      {
+        title: "Default",
+        description: "",
+        label: "green",
+        day: dayjs(),
+        id: 24345,
+        groupId: 0,
+        done: false,
+      },
+    ]; // default event for testing
   return parsedEvents;
 }
 
@@ -226,11 +253,11 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   const [objectForAction, setObjectForAction] = useState({});
 
   // groups
-  const [savedGroups, dispatchGroups] = useReducer(
-    groupsReducer,
-    [],
-    initGroups
-  );
+  // const [savedGroups, dispatchGroups] = useReducer(
+  //   groupsReducer,
+  //   [],
+  //   initGroups
+  // );
   // [],
 
   // POPPER
@@ -246,11 +273,101 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   // Fake Task
   const [showFakeTask, setShowFakeTask] = useState(true);
 
-  const [savedEvents, dispatchCalEvent] = useReducer(
-    savedEventsReducer,
-    [],
-    initEvents
+  // const [savedEvents, dispatchCalEvent] = useReducer(
+  //   savedEventsReducer,
+  //   [],
+  //   initEvents
+  // );
+
+  // useEffect(() => {
+  //   localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
+  // }, [savedEvents]);
+
+  // useEffect(() => {
+  //   localStorage.setItem("savedGroups", JSON.stringify(savedGroups));
+  // }, [savedGroups]);
+
+  //
+  //  ? useLocalStorage Area START
+
+  // EVENTS START
+  const [savedEvents, setSavedEvents] = useLocalStorage<Event[]>(
+    "savedEvents",
+    []
   );
+
+  // adding new event from behind of the array
+  const addEvent = (newEvent: Event) => {
+    setSavedEvents([...savedEvents, newEvent]);
+  };
+
+  // adding new event from the front of the array
+  const pushEvent = (newEvent: Event) => {
+    setSavedEvents([newEvent, ...savedEvents]);
+  };
+
+  const deleteEvent = (eventId: number) => {
+    setSavedEvents((prevEvents) =>
+      prevEvents.filter((evt) => evt.id !== eventId)
+    );
+  };
+
+  const editEvent = (editedEvent: Event) => {
+    setSavedEvents((prevEvents) => {
+      return prevEvents.map((evt) => {
+        if (evt.id === editedEvent.id) return editedEvent;
+        else return evt;
+      });
+    });
+  };
+  // EVENTS END
+
+  // GROUPS START
+
+  // initialization of the groups
+  let defaultGroup: Group = {
+    title: "Your Default Group",
+    id: Date.now(),
+    description: "Your Default Group's Description",
+    checked: true,
+    label: labelsClasses[0],
+  };
+
+  // TODO: вместе c "defaultGroup" может работать не правильно, нужно тестить.
+  const [savedGroups, setSavedGroups] = useLocalStorage<Group[]>(
+    "savedGroups",
+    [defaultGroup]
+  );
+
+  // adding new group from behind of the array
+  const addGroup = (newGroup: Group) => {
+    setSavedGroups([...savedGroups, newGroup]);
+  };
+
+  const deleteGroup = (groupId: number) => {
+    setSavedEvents((prevGroups) =>
+      prevGroups.filter((gr) => gr.id !== groupId)
+    );
+  };
+
+  const editGroup = (editedGroup: Group) => {
+    setSavedGroups((prevGroups) => {
+      return prevGroups.map((gr) => {
+        if (gr.id === editedGroup.id) return editedGroup;
+        else return gr;
+      });
+    });
+  };
+
+  // GROUPS END
+
+  const [selectedDaysArray, setSelectedDaysArray] = useLocalStorage(
+    "selectedDaysArray",
+    getProperSelectedDays([dayjs()], 7)
+  );
+
+  //  ? useLocalStorage Area END
+  //
 
   const filteredEvents = useMemo(() => {
     return savedEvents.filter((evt: Event) =>
@@ -261,17 +378,6 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     );
   }, [savedEvents, savedGroups]);
 
-  useEffect(() => {
-    localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
-  }, [savedEvents]);
-
-  useEffect(() => {
-    localStorage.setItem("savedGroups", JSON.stringify(savedGroups));
-  }, [savedGroups]);
-
-  const [selectedDaysArray, setSelectedDaysArray] = useState(
-    getProperSelectedDays([dayjs()])
-  );
   const [chosenDay, setChosenDay] = useState(dayjs());
 
   function changeShowEventModal() {
@@ -336,10 +442,19 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     setChosenDayForTask,
     chosenDay,
     setChosenDay,
-    dispatchCalEvent,
+    // dispatchCalEvent,
+
     savedEvents,
+    addEvent,
+    pushEvent,
+    editEvent,
+    deleteEvent,
     savedGroups,
-    dispatchGroups,
+    addGroup,
+    editGroup,
+    deleteGroup,
+
+    // dispatchGroups,
     filteredEvents,
     referenceElement,
     setReferenceElement,

@@ -12,19 +12,22 @@ import "./index.css";
 import "./util/util";
 
 function App() {
-  const { showSidebar, selectedDaysArray, showConfirmationWin } =
-    useGlobalContext();
+  const {
+    showSidebar,
+    // selectedDaysArray,
+    showConfirmationWin,
+  } = useGlobalContext();
 
   return (
     <>
-      {showConfirmationWin && <ConfirmationWindow />}
+      {/* {showConfirmationWin && <ConfirmationWindow />} */}
       <EventModal />
       <GroupModal />
       <div className='App h-screen flex flex-col'>
         <Navbar />
         <div className='flex flex-1 p-1 max-h-[90%]'>
           {showSidebar && <Sidebar />}
-          <MainDaysComponent timeSpan={selectedDaysArray} />
+          <MainDaysComponent />
         </div>
       </div>
     </>

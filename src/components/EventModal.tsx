@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 // import { popperConfig } from "../Variables";
-import { labelsClasses, useGlobalContext } from "../context/context";
+import { Group, labelsClasses, useGlobalContext } from "../context/context";
 import "../index.css";
 import { Dropdown } from "./common/Dropdown";
 import { Icon } from "./common/Icon";
@@ -13,7 +13,10 @@ const EventModal = () => {
     changeShowEventModal,
     modalRef,
     chosenDayForTask,
-    dispatchCalEvent,
+    // dispatchCalEvent,
+    editEvent,
+    pushEvent,
+    deleteEvent,
     referenceElement,
     setShowFakeTask,
     savedGroups,
@@ -30,10 +33,14 @@ const EventModal = () => {
       ? labelsClasses.find((lbl) => lbl === selectedEvent.label)
       : labelsClasses[0]
   );
-  const [chosenGroupForTask, setChosenGroupForTask] = useState(
-    selectedEvent
-      ? savedGroups.find((group) => group.id === selectedEvent.groupId)
-      : savedGroups[0]
+
+  const [chosenGroupForTask, setChosenGroupForTask] = useState<
+    Group | undefined
+  >(
+    // selectedEvent
+    // ? savedGroups.find((group) => group.id === selectedEvent.groupId)
+    // :
+    undefined
   );
 
   const [editMode, setEditMode] = useState(false);
@@ -50,7 +57,7 @@ const EventModal = () => {
       setTitle("");
       setDescription("");
       setSelectedLabel(labelsClasses[0]);
-      setChosenGroupForTask(savedGroups[0]);
+      setChosenGroupForTask(undefined);
     }
   }, [selectedEvent, savedGroups]);
 
@@ -120,7 +127,7 @@ const EventModal = () => {
     changeShowEventModal(false);
     setSelectedEvent(null);
     setSelectedLabel(labelsClasses[0]);
-    setChosenGroupForTask(savedGroups[0]);
+    // setChosenGroupForTask(savedGroups[0]);
     setShowFakeTask(false);
     setEditMode(false);
     //appearance
@@ -146,9 +153,11 @@ const EventModal = () => {
     };
 
     if (selectedEvent) {
-      dispatchCalEvent({ type: "update", payload: newTask });
+      // dispatchCalEvent({ type: "update", payload: newTask });
+      editEvent(newTask);
     } else {
-      dispatchCalEvent({ type: "pushFromStart", payload: newTask });
+      // dispatchCalEvent({ type: "pushFromStart", payload: newTask });
+      pushEvent(newTask);
     }
 
     setModalDefaults();
@@ -159,10 +168,11 @@ const EventModal = () => {
 
     if (selectedEvent === null) return;
 
-    dispatchCalEvent({
-      type: "delete",
-      payload: selectedEvent,
-    });
+    deleteEvent(selectedEvent.id);
+    // dispatchCalEvent({
+    //   type: "delete",
+    //   payload: selectedEvent,
+    // });
 
     setModalDefaults();
   }
@@ -179,10 +189,11 @@ const EventModal = () => {
     let copySelEvent = selectedEvent;
     copySelEvent.done = !selectedEvent.done;
 
-    dispatchCalEvent({
-      type: "update",
-      payload: copySelEvent,
-    });
+    // dispatchCalEvent({
+    //   type: "update",
+    //   payload: copySelEvent,
+    // });
+    editEvent(copySelEvent);
 
     setModalDefaults();
   }
@@ -227,7 +238,7 @@ const EventModal = () => {
                 <p className='pl-1 unselectable'>
                   {selectedEvent
                     ? dayjs(selectedEvent.day).format("dddd, MMMM DD")
-                    : chosenDayForTask.format("dddd, MMMM DD")}
+                    : dayjs(chosenDayForTask).format("dddd, MMMM DD")}
                 </p>
                 {description && <Icon type={"segment"} />}
                 {description && (
@@ -291,7 +302,7 @@ const EventModal = () => {
                 <p className='pl-1 unselectable'>
                   {selectedEvent
                     ? dayjs(selectedEvent.day).format("dddd, MMMM DD")
-                    : chosenDayForTask.format("dddd, MMMM DD")}
+                    : dayjs(chosenDayForTask).format("dddd, MMMM DD")}
                 </p>
                 <Icon type={"segment"} />
                 <textarea

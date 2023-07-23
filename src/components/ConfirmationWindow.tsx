@@ -11,8 +11,8 @@ const ConfirmationWindow = () => {
     setShowCancelButton,
     setShowConfirmationWin,
     objectForAction,
-    dispatchGroups,
-    dispatchCalEvent,
+    // dispatchGroups,
+    // dispatchCalEvent,
     savedEvents,
   } = useGlobalContext();
 
@@ -31,15 +31,15 @@ const ConfirmationWindow = () => {
     if (objectForAction.name === "group") {
       for (let i = 0; i < savedEvents.length; i++) {
         if (savedEvents[i].groupId === objectForAction.payload.id) {
-          console.log(savedEvents[i]);
-          dispatchCalEvent({ type: "delete", payload: savedEvents[i] });
+          // console.log(savedEvents[i]);
+          // dispatchCalEvent({ type: "delete", payload: savedEvents[i] });
         }
       }
 
-      dispatchGroups({
-        type: objectForAction.type,
-        payload: objectForAction.payload,
-      });
+      //   dispatchGroups({
+      //     type: objectForAction.type,
+      //     payload: objectForAction.payload,
+      //   });
     }
     setWindowDefaults();
   }

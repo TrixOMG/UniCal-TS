@@ -5,12 +5,13 @@ import { Event, useGlobalContext } from "../context/context";
 import EventComponent from "./EventComponent";
 
 export const AllDayTaskBox = (props: { pDay: Dayjs }) => {
-  const { pDay } = props
+  const { pDay } = props;
 
   const [dayEvents, setDayEvents] = useState<Event[]>([]);
   const { filteredEvents } = useGlobalContext();
 
   useEffect(() => {
+    if (filteredEvents === undefined) return;
     const events = filteredEvents.filter(
       (evt) => dayjs(evt.day).format("DD-MM-YY") === pDay.format("DD-MM-YY")
     );

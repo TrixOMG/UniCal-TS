@@ -87,6 +87,7 @@ const Navbar = () => {
   }
 
   function renderMonthAndYear() {
+    if (selectedDaysArray === null) return;
     const monthOfTheFirstDay = selectedDaysArray[0].month();
     const yearOfTheFirstDay = selectedDaysArray[0].year();
     if (

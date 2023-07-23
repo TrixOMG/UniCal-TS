@@ -1,3 +1,4 @@
+import { pseudoRandomBytes } from "crypto";
 import { Dayjs } from "dayjs";
 
 // global variables
@@ -46,13 +47,15 @@ export function getMonth(month = dayjs().month()) {
   return daysMatrix;
 }
 
+// TODO: write a separate function for changing the beginning of the timespan (like under the next comment)
 export function getProperSelectedDays(pSelDaysArray:Dayjs[], pDaysArrayLength?:number) {
   let daysMatrix = [];
   let index = -1;
 
   // действия в случае когда юзер просто хочет поменять начало временного промежутка (первый день)
+  if(pSelDaysArray.length === 1){
   if (pDaysArrayLength) {
-    if (pDaysArrayLength > 7) {
+    if (pSelDaysArray.length > 7) {
       if (pSelDaysArray[0].day() === 0) {
         pSelDaysArray = dayjs(
           new Date(
@@ -86,6 +89,7 @@ export function getProperSelectedDays(pSelDaysArray:Dayjs[], pDaysArrayLength?:n
     // console.log(daysMatrix);
     return daysMatrix;
   }
+}
   // запомнить здесь первый день и возвращать массив в том порядке, в каком выбрал пользователь
   // то есть он может быть и в обратном порядке(не в хронологическом), т.к. сейчас нам это не важно
   // при этом выбранный пользователем день будет всегда первым в массиве
