@@ -3,18 +3,19 @@ import dayjs, { Dayjs } from "dayjs";
 import React, {
   Dispatch,
   MutableRefObject,
-  Reducer,
+  // Reducer,
   SetStateAction,
   createContext,
   useContext,
-  useEffect,
+  // useEffect,
   useMemo,
-  useReducer,
+  // useReducer,
   useState,
 } from "react";
 
 import { useLocalStorage } from "usehooks-ts";
 
+// import { BuiltQueryMethods } from "@testing-library/react";
 import { useOutsideAlerter } from "../hooks/useOutsideAlerter";
 import { getProperSelectedDays } from "../util/util";
 
@@ -26,6 +27,8 @@ export const labelsClasses = [
   "red",
   "purple",
 ];
+
+const tailwindClasses = "grid-cols-1 grid-cols-2 grid-rows-1 grid-rows-2";
 
 // INTERFACES START
 export interface GlobalContextProps {
@@ -51,7 +54,8 @@ export interface GlobalContextProps {
   monthIndex: number;
   setMonthIndex: Dispatch<SetStateAction<number>>;
   showSidebar: boolean;
-  setShowSidebar: Dispatch<SetStateAction<boolean>>;
+  // setShowSidebar: () => void; //Dispatch<SetStateAction<boolean>>;
+  toggleShowSidebar: (pShowSidebar: boolean) => void;
   selectedEvent: Event | null;
   setSelectedEvent: Dispatch<SetStateAction<Event | null>>;
   selectedGroup: Group | null;
@@ -124,21 +128,21 @@ type EventAction =
 
 // INTERFACES END
 
-const groupsReducer: Reducer<Group[], GroupAction> = (state, action) => {
-  switch (action.type) {
-    case "push":
-      return [...state, action.payload];
-    case "update":
-      return state.map((group) =>
-        group.id === action.payload.id ? action.payload : group
-      );
-    case "delete":
-      // change
-      return state.filter((group) => group.id !== action.payload.id);
-    default:
-      throw new Error("groupsReducerError");
-  }
-};
+// const groupsReducer: Reducer<Group[], GroupAction> = (state, action) => {
+//   switch (action.type) {
+//     case "push":
+//       return [...state, action.payload];
+//     case "update":
+//       return state.map((group) =>
+//         group.id === action.payload.id ? action.payload : group
+//       );
+//     case "delete":
+//       // change
+//       return state.filter((group) => group.id !== action.payload.id);
+//     default:
+//       throw new Error("groupsReducerError");
+//   }
+// };
 
 // function initGroups() {
 //   const storageGroups = localStorage.getItem("savedGroups");
@@ -159,42 +163,42 @@ const groupsReducer: Reducer<Group[], GroupAction> = (state, action) => {
 //   return parsedGroups;
 // }
 
-const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
-  switch (action.type) {
-    case "push":
-      return [...state, action.payload];
-    case "update":
-      return state.map((evt) =>
-        evt.id === action.payload.id ? action.payload : evt
-      );
-    case "delete":
-      return state.filter((evt) => evt.id !== action.payload.id);
-    case "pushFromStart":
-      return [action.payload, ...state];
-    default:
-      throw new Error("eventsReducerError");
-  }
-};
+// const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
+//   switch (action.type) {
+//     case "push":
+//       return [...state, action.payload];
+//     case "update":
+//       return state.map((evt) =>
+//         evt.id === action.payload.id ? action.payload : evt
+//       );
+//     case "delete":
+//       return state.filter((evt) => evt.id !== action.payload.id);
+//     case "pushFromStart":
+//       return [action.payload, ...state];
+//     default:
+//       throw new Error("eventsReducerError");
+//   }
+// };
 
-function initEvents() {
-  const storageEvents = localStorage.getItem("savedEvents");
-  let parsedEvents = [];
+// function initEvents() {
+//   const storageEvents = localStorage.getItem("savedEvents");
+//   let parsedEvents = [];
 
-  if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
-  else
-    parsedEvents = [
-      {
-        title: "Default",
-        description: "",
-        label: "green",
-        day: dayjs(),
-        id: 24345,
-        groupId: 0,
-        done: false,
-      },
-    ]; // default event for testing
-  return parsedEvents;
-}
+//   if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
+//   else
+//     parsedEvents = [
+//       {
+//         title: "Default",
+//         description: "",
+//         label: "green",
+//         day: dayjs(),
+//         id: 24345,
+//         groupId: 0,
+//         done: false,
+//       },
+//     ]; // default event for testing
+//   return parsedEvents;
+// }
 
 // const defaultGroup = {
 //   title: "Your Default Group",
@@ -222,6 +226,10 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   const [monthIndex, setMonthIndex] = useState<number>(dayjs().month() + 1);
 
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
+
+  function toggleShowSidebar(pShowSidebar: boolean) {
+    setShowSidebar(!pShowSidebar);
+  }
 
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -361,9 +369,12 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
   // GROUPS END
 
-  const [selectedDaysArray, setSelectedDaysArray] = useLocalStorage(
-    "selectedDaysArray",
-    getProperSelectedDays([dayjs()], 7)
+  // const [selectedDaysArray, setSelectedDaysArray] = useLocalStorage(
+  //   "selectedDaysArray",
+  //   getProperSelectedDays([dayjs()], 7)
+  // );
+  const [selectedDaysArray, setSelectedDaysArray] = useState(
+    getProperSelectedDays([dayjs()])
   );
 
   //  ? useLocalStorage Area END
@@ -431,7 +442,8 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     setSelectedGroup,
 
     showSidebar,
-    setShowSidebar,
+    // setShowSidebar,
+    toggleShowSidebar,
     showEventModal,
     setShowEventModal,
     modalRef, //for hiding event modal on click outside

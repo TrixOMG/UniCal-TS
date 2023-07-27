@@ -7,7 +7,8 @@ import { Icon } from "./common/Icon";
 const Navbar = () => {
   const {
     showSidebar,
-    setShowSidebar,
+    // setShowSidebar,
+    toggleShowSidebar,
     selectedDaysArray,
     setSelectedDaysArray,
     monthIndex,
@@ -86,41 +87,47 @@ const Navbar = () => {
     }
   }
 
-  function renderMonthAndYear() {
-    if (selectedDaysArray === null) return;
-    const monthOfTheFirstDay = selectedDaysArray[0].month();
-    const yearOfTheFirstDay = selectedDaysArray[0].year();
-    if (
-      selectedDaysArray[selectedDaysArray.length - 1].month() ===
-        monthOfTheFirstDay &&
-      selectedDaysArray[selectedDaysArray.length - 1].year() ===
-        yearOfTheFirstDay
-    ) {
-      return selectedDaysArray[0].format("MMMM YYYY");
-    } else if (
-      selectedDaysArray[selectedDaysArray.length - 1].month() !==
-        monthOfTheFirstDay &&
-      selectedDaysArray[selectedDaysArray.length - 1].year() ===
-        yearOfTheFirstDay
-    ) {
-      return (
-        selectedDaysArray[0].format("MMMM") +
-        " - " +
-        selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
-      );
-    } else {
-      return (
-        selectedDaysArray[0].format("MMMM YYYY") +
-        " - " +
-        selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
-      );
-    }
+  // function renderMonthAndYear() {
+  //   if (!selectedDaysArray.length) return;
+
+  //   const monthOfTheFirstDay = selectedDaysArray[0].month();
+  //   const yearOfTheFirstDay = selectedDaysArray[0].year();
+  //   if (
+  //     selectedDaysArray[selectedDaysArray.length - 1].month() ===
+  //       monthOfTheFirstDay &&
+  //     selectedDaysArray[selectedDaysArray.length - 1].year() ===
+  //       yearOfTheFirstDay
+  //   ) {
+  //     return selectedDaysArray[0].format("MMMM YYYY");
+  //   } else if (
+  //     selectedDaysArray[selectedDaysArray.length - 1].month() !==
+  //       monthOfTheFirstDay &&
+  //     selectedDaysArray[selectedDaysArray.length - 1].year() ===
+  //       yearOfTheFirstDay
+  //   ) {
+  //     return (
+  //       selectedDaysArray[0].format("MMMM") +
+  //       " - " +
+  //       selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
+  //     );
+  //   } else {
+  //     return (
+  //       selectedDaysArray[0].format("MMMM YYYY") +
+  //       " - " +
+  //       selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
+  //     );
+  //   }
+  // }
+  function handleClickShow(e: any) {
+    e.preventDefault();
+    toggleShowSidebar(showSidebar);
   }
 
   return (
     <header className='px-4 py-2 flex items-center align-middle border rounded-lg rounded-t-none mx-1 h-[10%]'>
       <button
-        onClick={() => setShowSidebar(!showSidebar)}
+        // onClick={() => setShowSidebar(!showSidebar)}
+        onClick={handleClickShow}
         className='w-8 h-8 cursor-pointer p-1'
       >
         <Icon type={"menu"} />
@@ -152,7 +159,8 @@ const Navbar = () => {
         <Icon type={"chevron_right"} />
       </button>
       <h2 className=' ml-4 text-xl text-gray-500 font-bold'>
-        {renderMonthAndYear()}
+        {/* {renderMonthAndYear()} */}
+        renderMonthAndYear
       </h2>
     </header>
   );
