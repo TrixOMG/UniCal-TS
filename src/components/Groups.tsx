@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import { Group, labelsClasses, useGlobalContext } from "../context/context";
-import { Icon } from "./common/Icon";
+// import { ReactComponent as AddIcon } from "../icons/plus.svg";
+import { FiPlus } from "react-icons/fi";
+// import { Icon } from "./common/Icon";
 
 const Groups = () => {
   const {
@@ -40,7 +42,9 @@ const Groups = () => {
           }}
           ref={modalReference}
         >
-          <Icon type={"add"} />
+          <div className='flex justify-center items-center h-full w-full'>
+            <FiPlus className='text-gray-400 unselectable text-lg' />
+          </div>
         </button>
       </header>
       {savedGroups.length > 0 &&

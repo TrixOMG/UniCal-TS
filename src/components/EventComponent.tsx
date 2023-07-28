@@ -46,6 +46,8 @@ const EventComponent = (props: { evt: Event; provided: DraggableProvided }) => {
     // });
   }
 
+  const tailwindClasses = "bg-green-400 bg-green-300 text-green-400";
+
   return (
     <div
       onClick={(e) => {

@@ -120,11 +120,11 @@ type GroupAction =
   | { type: "update"; payload: Group }
   | { type: "delete"; payload: Group };
 
-type EventAction =
-  | { type: "push"; payload: Event }
-  | { type: "update"; payload: Event }
-  | { type: "delete"; payload: Event }
-  | { type: "pushFromStart"; payload: Event };
+// type EventAction =
+//   | { type: "push"; payload: Event }
+//   | { type: "update"; payload: Event }
+//   | { type: "delete"; payload: Event }
+//   | { type: "pushFromStart"; payload: Event };
 
 // INTERFACES END
 

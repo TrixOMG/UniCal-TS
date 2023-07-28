@@ -135,13 +135,11 @@ const MainDaysComponent = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div
           className={`mx-1 flex-1 grid gap-1 
-          
-            // selectedDaysArray?.length > 0
-            // ?
-            // TODO: uncomment function below
-            // getDaysGridClasses()
-
-            // : "grid-cols-7 grid-rows-4 "
+            ${
+              selectedDaysArray?.length > 0
+                ? getDaysGridClasses()
+                : "grid-cols-7 grid-rows-4 "
+            }
           }
         `}
         >

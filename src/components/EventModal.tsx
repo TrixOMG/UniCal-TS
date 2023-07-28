@@ -1,11 +1,17 @@
 import dayjs from "dayjs";
 import React, { SyntheticEvent, useEffect, useState } from "react";
+import {
+  TfiAlarmClock,
+  TfiClose,
+  TfiLayoutListThumb,
+  TfiList,
+  TfiPencil,
+  TfiTrash,
+} from "react-icons/tfi";
 import { usePopper } from "react-popper";
-// import { popperConfig } from "../Variables";
 import { Group, labelsClasses, useGlobalContext } from "../context/context";
 import "../index.css";
 import { Dropdown } from "./common/Dropdown";
-import { Icon } from "./common/Icon";
 
 const EventModal = () => {
   const {
@@ -210,17 +216,17 @@ const EventModal = () => {
             <header className='bg-gray-100 px-4 py-2 flex justify-end items-center'>
               <div>
                 <button onClick={() => setEditMode(true)}>
-                  <Icon type={"edit"} />
+                  <TfiPencil />
                 </button>
                 <button
                   onClick={(e) => {
                     handleDelete(e);
                   }}
                 >
-                  <Icon type={"delete"} />
+                  <TfiTrash />
                 </button>
                 <button type='button' onClick={() => handleClose()}>
-                  <Icon type={"close"} />
+                  <TfiClose />
                 </button>
               </div>
             </header>
@@ -234,17 +240,20 @@ const EventModal = () => {
                 <p className='pl-1 pt-1 text-gray-600 text-lg font-semibold w-full pb-2'>
                   {selectedEvent.title}
                 </p>
-                <Icon type={"schedule"} />
+                <div>
+                  <TfiList />
+                </div>
                 <p className='pl-1 unselectable'>
                   {selectedEvent
                     ? dayjs(selectedEvent.day).format("dddd, MMMM DD")
                     : dayjs(chosenDayForTask).format("dddd, MMMM DD")}
                 </p>
-                {description && <Icon type={"segment"} />}
+                {description && <TfiLayoutListThumb />}
                 {description && (
                   <pre className='pl-1 max-w-[24em]'>{description}</pre>
                 )}
-                <Icon type={"list_alt"} />
+                {/* <Icon type={"list_alt"} /> */}
+                <TfiList />
                 <p className='pl-1 unselectable pb-1'>
                   {
                     savedGroups.find(
@@ -278,11 +287,11 @@ const EventModal = () => {
                       handleDelete(e);
                     }}
                   >
-                    <Icon type={"delete"} />
+                    <TfiTrash />
                   </button>
                 )}
                 <button type='button' onClick={() => handleClose()}>
-                  <Icon type={"close"} />
+                  <TfiClose />
                 </button>
               </div>
             </header>
@@ -298,13 +307,13 @@ const EventModal = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
-                <Icon type={"schedule"} />
+                <TfiAlarmClock />
                 <p className='pl-1 unselectable'>
                   {selectedEvent
                     ? dayjs(selectedEvent.day).format("dddd, MMMM DD")
                     : dayjs(chosenDayForTask).format("dddd, MMMM DD")}
                 </p>
-                <Icon type={"segment"} />
+                <TfiLayoutListThumb />
                 <textarea
                   // type='text'
                   name='description'
