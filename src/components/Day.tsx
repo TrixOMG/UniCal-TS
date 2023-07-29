@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Event, useGlobalContext } from "../context/context";
 import { AllDayTaskBox } from "./AllDayTaskBox";
 import Timeline from "./timeline/Timeline";
@@ -44,7 +44,8 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
     if (filteredEvents === undefined) return;
 
     const events = filteredEvents.filter(
-      (evt) => dayjs(evt.day).format("DD-MM-YY") === pDay.format("DD-MM-YY")
+      (evt) =>
+        dayjs(evt.day).format("DD-MM-YY") === dayjs(pDay).format("DD-MM-YY")
     );
     setDayEvents(events);
   }, [filteredEvents, pDay]);

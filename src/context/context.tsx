@@ -183,6 +183,16 @@ function initEvents() {
   return parsedEvents;
 }
 
+function initSelectedDaysArray() {
+  const storageDays = localStorage.getItem("selectedDaysArray");
+  let parsedDays = [];
+
+  if (storageDays !== null) parsedDays = JSON.parse(storageDays);
+  else parsedDays = [dayjs()];
+
+  return parsedDays;
+}
+
 // const defaultGroup = {
 //   title: "Your Default Group",
 //   id: Date.now(),
@@ -323,13 +333,28 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
   // const [selectedDaysArray, setSelectedDaysArray] = useLocalStorage(
   //   "selectedDaysArray",
-  //   getProperSelectedDays([dayjs()], 7)
+  //   getProperSelectedDays([dayjs()])
   // );
+
   const [selectedDaysArray, setSelectedDaysArray] = useState(
-    getProperSelectedDays([dayjs()])
+    localStorage.getItem("selectedDaysArray")
+      ? JSON.parse(localStorage.getItem("selectedDaysArray")!).map(
+          (day: string) => {
+            return dayjs(day);
+          }
+        )
+      : [dayjs()]
   );
 
+  useEffect(() => {
+    localStorage.setItem(
+      "selectedDaysArray",
+      JSON.stringify(selectedDaysArray)
+    );
+  }, [selectedDaysArray, setSelectedDaysArray]);
+
   //  ? useLocalStorage Area END
+
   //
 
   const filteredEvents = useMemo(() => {

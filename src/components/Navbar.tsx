@@ -91,31 +91,35 @@ const Navbar = () => {
   function renderMonthAndYear() {
     if (!selectedDaysArray.length) return;
 
-    const monthOfTheFirstDay = selectedDaysArray[0].month();
-    const yearOfTheFirstDay = selectedDaysArray[0].year();
+    let copySelectedDaysArray = selectedDaysArray.map((day) => {
+      return dayjs(day);
+    });
+
+    const monthOfTheFirstDay = copySelectedDaysArray[0].month();
+    const yearOfTheFirstDay = copySelectedDaysArray[0].year();
     if (
-      selectedDaysArray[selectedDaysArray.length - 1].month() ===
+      copySelectedDaysArray[copySelectedDaysArray.length - 1].month() ===
         monthOfTheFirstDay &&
-      selectedDaysArray[selectedDaysArray.length - 1].year() ===
+      copySelectedDaysArray[copySelectedDaysArray.length - 1].year() ===
         yearOfTheFirstDay
     ) {
-      return selectedDaysArray[0].format("MMMM YYYY");
+      return copySelectedDaysArray[0].format("MMMM YYYY");
     } else if (
-      selectedDaysArray[selectedDaysArray.length - 1].month() !==
+      copySelectedDaysArray[copySelectedDaysArray.length - 1].month() !==
         monthOfTheFirstDay &&
-      selectedDaysArray[selectedDaysArray.length - 1].year() ===
+      copySelectedDaysArray[copySelectedDaysArray.length - 1].year() ===
         yearOfTheFirstDay
     ) {
       return (
-        selectedDaysArray[0].format("MMMM") +
+        copySelectedDaysArray[0].format("MMMM") +
         " - " +
-        selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
+        copySelectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
       );
     } else {
       return (
-        selectedDaysArray[0].format("MMMM YYYY") +
+        copySelectedDaysArray[0].format("MMMM YYYY") +
         " - " +
-        selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
+        copySelectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
       );
     }
   }

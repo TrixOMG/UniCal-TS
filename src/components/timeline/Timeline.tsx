@@ -1,11 +1,8 @@
 import React from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const Timeline = () => {
   //TODO: create FiveMinuteSegment array variable
-  const FiveMinuteSegment = {
-    
-  };
+  const FiveMinuteSegment = {};
 
   // function handleDragEnd({ destination, source, draggableId }) {
   // // если таск дропнули в место куда его нельзя дропнуть
