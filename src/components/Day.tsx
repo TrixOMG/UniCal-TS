@@ -1,11 +1,13 @@
 import dayjs, { Dayjs } from "dayjs";
-import React, { useRef } from "react";
-import { useGlobalContext } from "../context/context";
+import React, { useMemo, useRef, useState } from "react";
+import { Event, useGlobalContext } from "../context/context";
 import { AllDayTaskBox } from "./AllDayTaskBox";
-// import Timeline from "./timeline/Timeline";
+import Timeline from "./timeline/Timeline";
 
 const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
   const { pDay, rowIdx } = props;
+
+  const [dayEvents, setDayEvents] = useState<Event[]>([]);
 
   const {
     setSelectedEvent,
@@ -17,6 +19,7 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
     chosenDayForTask,
     setSelectedDaysArray,
     setChosenDay,
+    filteredEvents,
   } = useGlobalContext();
 
   function getAccentOnToday() {
@@ -36,6 +39,15 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
     changeShowEventModal(true);
     setShowFakeTask(true);
   }
+
+  useMemo(() => {
+    if (filteredEvents === undefined) return;
+
+    const events = filteredEvents.filter(
+      (evt) => dayjs(evt.day).format("DD-MM-YY") === pDay.format("DD-MM-YY")
+    );
+    setDayEvents(events);
+  }, [filteredEvents, pDay]);
 
   return (
     <div className='border border-gray-200 flex flex-col rounded-lg'>
@@ -69,8 +81,8 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
       >
         /
       </div>
-      <AllDayTaskBox pDay={pDay} />
-      {/* <Timeline /> */}
+      <AllDayTaskBox pDay={pDay} dayEvents={dayEvents} />
+      {<Timeline />}
     </div>
   );
 };

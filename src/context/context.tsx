@@ -35,10 +35,6 @@ export interface GlobalContextProps {
   // LOCAL STORAGE START
 
   savedEvents: Event[];
-  // addEvent: (newEvent: Event) => void;
-  // pushEvent: (newEvent: Event) => void;
-  // editEvent: (editedEvent: Event) => void;
-  // deleteEvent: (eventId: number) => void;
   savedGroups: Group[];
   addGroup: (newGroup: Group) => void;
   editGroup: (editedEvent: Group) => void;
@@ -54,7 +50,6 @@ export interface GlobalContextProps {
   monthIndex: number;
   setMonthIndex: Dispatch<SetStateAction<number>>;
   showSidebar: boolean;
-  // setShowSidebar: () => void; //Dispatch<SetStateAction<boolean>>;
   toggleShowSidebar: (pShowSidebar: boolean) => void;
   selectedEvent: Event | null;
   setSelectedEvent: Dispatch<SetStateAction<Event | null>>;
@@ -76,14 +71,12 @@ export interface GlobalContextProps {
   //TODO: define object
   objectForAction: any;
   setObjectForAction: Dispatch<SetStateAction<any>>;
-  // savedGroups: Group[];
   referenceElement: HTMLElement | null;
   setReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>;
   groupReferenceElement: HTMLElement | null;
   setGroupReferenceElement: Dispatch<SetStateAction<HTMLElement | null>>;
   showFakeTask: boolean;
   setShowFakeTask: Dispatch<SetStateAction<boolean>>;
-  // savedEvents: Event[];
   filteredEvents: Event[];
   selectedDaysArray: Dayjs[];
   setSelectedDaysArray: Dispatch<SetStateAction<Dayjs[]>>;
@@ -185,18 +178,8 @@ function initEvents() {
   let parsedEvents = [];
 
   if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
-  else
-    parsedEvents = [
-      // {
-      //   title: "Default",
-      //   description: "",
-      //   label: "green",
-      //   day: dayjs(),
-      //   id: 24345,
-      //   groupId: 0,
-      //   done: false,
-      // },
-    ]; // default event for testing
+  else parsedEvents = []; // default event for testing
+
   return parsedEvents;
 }
 
@@ -220,6 +203,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     tooltipRefElement,
     setTooltipRefElement,
   ] = useState<HTMLElement | null>(null);
+
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   // tooltip
 
@@ -257,6 +241,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   const [confirmationWindowTitle, setConfirmationWindowTitle] = useState<
     string
   >("");
+
   const [showCancelButton, setShowCancelButton] = useState<boolean>(true);
   const [objectForAction, setObjectForAction] = useState({});
 
@@ -297,38 +282,6 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
 
   //
   //  ? useLocalStorage Area START
-
-  // EVENTS START
-  // const [savedEvents, setSavedEvents] = useLocalStorage<Event[]>(
-  //   "savedEvents",
-  //   []
-  // );
-
-  // // adding new event from behind of the array
-  // const addEvent = (newEvent: Event) => {
-  //   setSavedEvents([...savedEvents, newEvent]);
-  // };
-
-  // // adding new event from the front of the array
-  // const pushEvent = (newEvent: Event) => {
-  //   setSavedEvents([newEvent, ...savedEvents]);
-  // };
-
-  // const deleteEvent = (eventId: number) => {
-  //   setSavedEvents((prevEvents) =>
-  //     prevEvents.filter((evt) => evt.id !== eventId)
-  //   );
-  // };
-
-  // const editEvent = (editedEvent: Event) => {
-  //   setSavedEvents((prevEvents) => {
-  //     return prevEvents.map((evt) => {
-  //       if (evt.id === editedEvent.id) return editedEvent;
-  //       else return evt;
-  //     });
-  //   });
-  // };
-  // EVENTS END
 
   // GROUPS START
 
