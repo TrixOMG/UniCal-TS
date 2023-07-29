@@ -10,8 +10,8 @@ const EventComponent = (props: { evt: Event; provided: DraggableProvided }) => {
     savedGroups,
     setSelectedEvent,
     changeShowEventModal,
-    // dispatchCalEvent,
-    editEvent,
+    dispatchCalEvent,
+    // editEvent,
   } = useGlobalContext();
 
   function handleOnEventClick(pEvent: Event) {
@@ -23,27 +23,27 @@ const EventComponent = (props: { evt: Event; provided: DraggableProvided }) => {
     setSelectedEvent(null);
     changeShowEventModal(false);
 
-    editEvent({
-      title: pEvent.title,
-      description: pEvent.description,
-      label: pEvent.label,
-      day: pEvent.day,
-      groupId: pEvent.groupId,
-      id: pEvent.id,
-      done: !pEvent.done,
-    });
-    // dispatchCalEvent({
-    //   type: "update",
-    //   payload: {
-    //     title: pEvent.title,
-    //     description: pEvent.description,
-    //     label: pEvent.label,
-    //     day: pEvent.day,
-    //     groupId: pEvent.groupId,
-    //     id: pEvent.id,
-    //     done: !pEvent.done,
-    //   },
+    // editEvent({
+    //   title: pEvent.title,
+    //   description: pEvent.description,
+    //   label: pEvent.label,
+    //   day: pEvent.day,
+    //   groupId: pEvent.groupId,
+    //   id: pEvent.id,
+    //   done: !pEvent.done,
     // });
+    dispatchCalEvent({
+      type: "update",
+      payload: {
+        title: pEvent.title,
+        description: pEvent.description,
+        label: pEvent.label,
+        day: pEvent.day,
+        groupId: pEvent.groupId,
+        id: pEvent.id,
+        done: !pEvent.done,
+      },
+    });
   }
 
   const tailwindClasses = "bg-green-400 bg-green-300 text-green-400";

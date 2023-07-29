@@ -22,10 +22,10 @@ const EventModal = () => {
     changeShowEventModal,
     modalRef,
     chosenDayForTask,
-    // dispatchCalEvent,
-    editEvent,
-    pushEvent,
-    deleteEvent,
+    dispatchCalEvent,
+    // editEvent,
+    // pushEvent,
+    // deleteEvent,
     referenceElement,
     setShowFakeTask,
     savedGroups,
@@ -75,8 +75,11 @@ const EventModal = () => {
     if (showEventModal === false) {
       setShowFakeTask(false);
       setEditMode(false);
+      setSelectedEvent(null);
+      setSelectedLabel(labelsClasses[0]);
+      setChosenGroupForTask(savedGroups[0]);
     }
-  }, [setShowFakeTask, showEventModal]);
+  }, [setShowFakeTask, showEventModal, setSelectedEvent, savedGroups]);
 
   // POPPER
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(
@@ -163,11 +166,11 @@ const EventModal = () => {
     };
 
     if (selectedEvent) {
-      // dispatchCalEvent({ type: "update", payload: newTask });
-      editEvent(newTask);
+      dispatchCalEvent({ type: "update", payload: newTask });
+      // editEvent(newTask);
     } else {
-      // dispatchCalEvent({ type: "pushFromStart", payload: newTask });
-      pushEvent(newTask);
+      dispatchCalEvent({ type: "pushFromStart", payload: newTask });
+      // pushEvent(newTask);
     }
 
     setModalDefaults();
@@ -178,11 +181,11 @@ const EventModal = () => {
 
     if (selectedEvent === null) return;
 
-    deleteEvent(selectedEvent.id);
-    // dispatchCalEvent({
-    //   type: "delete",
-    //   payload: selectedEvent,
-    // });
+    // deleteEvent(selectedEvent.id);
+    dispatchCalEvent({
+      type: "delete",
+      payload: selectedEvent,
+    });
 
     setModalDefaults();
   }
@@ -199,11 +202,11 @@ const EventModal = () => {
     let copySelEvent = selectedEvent;
     copySelEvent.done = !selectedEvent.done;
 
-    // dispatchCalEvent({
-    //   type: "update",
-    //   payload: copySelEvent,
-    // });
-    editEvent(copySelEvent);
+    dispatchCalEvent({
+      type: "update",
+      payload: copySelEvent,
+    });
+    // editEvent(copySelEvent);
 
     setModalDefaults();
   }

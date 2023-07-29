@@ -3,13 +3,13 @@ import dayjs, { Dayjs } from "dayjs";
 import React, {
   Dispatch,
   MutableRefObject,
-  // Reducer,
+  Reducer,
   SetStateAction,
   createContext,
   useContext,
-  // useEffect,
+  useEffect,
   useMemo,
-  // useReducer,
+  useReducer,
   useState,
 } from "react";
 
@@ -28,17 +28,17 @@ export const labelsClasses = [
   "purple",
 ];
 
-const tailwindClasses = "grid-cols-1 grid-cols-2 grid-rows-1 grid-rows-2";
+// const tailwindClasses = "grid-cols-1 grid-cols-2 grid-rows-1 grid-rows-2";
 
 // INTERFACES START
 export interface GlobalContextProps {
   // LOCAL STORAGE START
 
   savedEvents: Event[];
-  addEvent: (newEvent: Event) => void;
-  pushEvent: (newEvent: Event) => void;
-  editEvent: (editedEvent: Event) => void;
-  deleteEvent: (eventId: number) => void;
+  // addEvent: (newEvent: Event) => void;
+  // pushEvent: (newEvent: Event) => void;
+  // editEvent: (editedEvent: Event) => void;
+  // deleteEvent: (eventId: number) => void;
   savedGroups: Group[];
   addGroup: (newGroup: Group) => void;
   editGroup: (editedEvent: Group) => void;
@@ -93,7 +93,7 @@ export interface GlobalContextProps {
   setSelectedGroupLabel: Dispatch<SetStateAction<string>>;
   modalRef: MutableRefObject<HTMLDivElement | null>;
   groupModalRef: MutableRefObject<HTMLDivElement | null>;
-  // dispatchCalEvent: Dispatch<EventAction>;
+  dispatchCalEvent: Dispatch<EventAction>;
   // dispatchGroups: Dispatch<GroupAction>;
 }
 
@@ -115,16 +115,16 @@ export interface Event {
   done: boolean;
 }
 
-type GroupAction =
-  | { type: "push"; payload: Group }
-  | { type: "update"; payload: Group }
-  | { type: "delete"; payload: Group };
+// type GroupAction =
+//   | { type: "push"; payload: Group }
+//   | { type: "update"; payload: Group }
+//   | { type: "delete"; payload: Group };
 
-// type EventAction =
-//   | { type: "push"; payload: Event }
-//   | { type: "update"; payload: Event }
-//   | { type: "delete"; payload: Event }
-//   | { type: "pushFromStart"; payload: Event };
+type EventAction =
+  | { type: "push"; payload: Event }
+  | { type: "update"; payload: Event }
+  | { type: "delete"; payload: Event }
+  | { type: "pushFromStart"; payload: Event };
 
 // INTERFACES END
 
@@ -163,42 +163,42 @@ type GroupAction =
 //   return parsedGroups;
 // }
 
-// const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
-//   switch (action.type) {
-//     case "push":
-//       return [...state, action.payload];
-//     case "update":
-//       return state.map((evt) =>
-//         evt.id === action.payload.id ? action.payload : evt
-//       );
-//     case "delete":
-//       return state.filter((evt) => evt.id !== action.payload.id);
-//     case "pushFromStart":
-//       return [action.payload, ...state];
-//     default:
-//       throw new Error("eventsReducerError");
-//   }
-// };
+const savedEventsReducer: Reducer<Event[], EventAction> = (state, action) => {
+  switch (action.type) {
+    case "push":
+      return [...state, action.payload];
+    case "update":
+      return state.map((evt) =>
+        evt.id === action.payload.id ? action.payload : evt
+      );
+    case "delete":
+      return state.filter((evt) => evt.id !== action.payload.id);
+    case "pushFromStart":
+      return [action.payload, ...state];
+    default:
+      throw new Error("eventsReducerError");
+  }
+};
 
-// function initEvents() {
-//   const storageEvents = localStorage.getItem("savedEvents");
-//   let parsedEvents = [];
+function initEvents() {
+  const storageEvents = localStorage.getItem("savedEvents");
+  let parsedEvents = [];
 
-//   if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
-//   else
-//     parsedEvents = [
-//       {
-//         title: "Default",
-//         description: "",
-//         label: "green",
-//         day: dayjs(),
-//         id: 24345,
-//         groupId: 0,
-//         done: false,
-//       },
-//     ]; // default event for testing
-//   return parsedEvents;
-// }
+  if (storageEvents !== null) parsedEvents = JSON.parse(storageEvents);
+  else
+    parsedEvents = [
+      // {
+      //   title: "Default",
+      //   description: "",
+      //   label: "green",
+      //   day: dayjs(),
+      //   id: 24345,
+      //   groupId: 0,
+      //   done: false,
+      // },
+    ]; // default event for testing
+  return parsedEvents;
+}
 
 // const defaultGroup = {
 //   title: "Your Default Group",
@@ -281,15 +281,15 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   // Fake Task
   const [showFakeTask, setShowFakeTask] = useState(true);
 
-  // const [savedEvents, dispatchCalEvent] = useReducer(
-  //   savedEventsReducer,
-  //   [],
-  //   initEvents
-  // );
+  const [savedEvents, dispatchCalEvent] = useReducer(
+    savedEventsReducer,
+    [],
+    initEvents
+  );
 
-  // useEffect(() => {
-  //   localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
-  // }, [savedEvents]);
+  useEffect(() => {
+    localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
+  }, [savedEvents]);
 
   // useEffect(() => {
   //   localStorage.setItem("savedGroups", JSON.stringify(savedGroups));
@@ -299,35 +299,35 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   //  ? useLocalStorage Area START
 
   // EVENTS START
-  const [savedEvents, setSavedEvents] = useLocalStorage<Event[]>(
-    "savedEvents",
-    []
-  );
+  // const [savedEvents, setSavedEvents] = useLocalStorage<Event[]>(
+  //   "savedEvents",
+  //   []
+  // );
 
-  // adding new event from behind of the array
-  const addEvent = (newEvent: Event) => {
-    setSavedEvents([...savedEvents, newEvent]);
-  };
+  // // adding new event from behind of the array
+  // const addEvent = (newEvent: Event) => {
+  //   setSavedEvents([...savedEvents, newEvent]);
+  // };
 
-  // adding new event from the front of the array
-  const pushEvent = (newEvent: Event) => {
-    setSavedEvents([newEvent, ...savedEvents]);
-  };
+  // // adding new event from the front of the array
+  // const pushEvent = (newEvent: Event) => {
+  //   setSavedEvents([newEvent, ...savedEvents]);
+  // };
 
-  const deleteEvent = (eventId: number) => {
-    setSavedEvents((prevEvents) =>
-      prevEvents.filter((evt) => evt.id !== eventId)
-    );
-  };
+  // const deleteEvent = (eventId: number) => {
+  //   setSavedEvents((prevEvents) =>
+  //     prevEvents.filter((evt) => evt.id !== eventId)
+  //   );
+  // };
 
-  const editEvent = (editedEvent: Event) => {
-    setSavedEvents((prevEvents) => {
-      return prevEvents.map((evt) => {
-        if (evt.id === editedEvent.id) return editedEvent;
-        else return evt;
-      });
-    });
-  };
+  // const editEvent = (editedEvent: Event) => {
+  //   setSavedEvents((prevEvents) => {
+  //     return prevEvents.map((evt) => {
+  //       if (evt.id === editedEvent.id) return editedEvent;
+  //       else return evt;
+  //     });
+  //   });
+  // };
   // EVENTS END
 
   // GROUPS START
@@ -341,7 +341,6 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     label: labelsClasses[0],
   };
 
-  // TODO: вместе c "defaultGroup" может работать не правильно, нужно тестить.
   const [savedGroups, setSavedGroups] = useLocalStorage<Group[]>(
     "savedGroups",
     [defaultGroup]
@@ -353,7 +352,7 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   };
 
   const deleteGroup = (groupId: number) => {
-    setSavedEvents((prevGroups) =>
+    setSavedGroups((prevGroups) =>
       prevGroups.filter((gr) => gr.id !== groupId)
     );
   };
@@ -454,13 +453,13 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
     setChosenDayForTask,
     chosenDay,
     setChosenDay,
-    // dispatchCalEvent,
+    dispatchCalEvent,
 
     savedEvents,
-    addEvent,
-    pushEvent,
-    editEvent,
-    deleteEvent,
+    // addEvent,
+    // pushEvent,
+    // editEvent,
+    // deleteEvent,
     savedGroups,
     addGroup,
     editGroup,
