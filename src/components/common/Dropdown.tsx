@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
-// import { DPDPopperConfig, dropdownPopperConfig } from "../../Variables";
 import { Group } from "../../context/context";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 

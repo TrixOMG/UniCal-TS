@@ -2,7 +2,8 @@ import dayjs from "dayjs";
 import React from "react";
 import { useGlobalContext } from "../context/context";
 import { getMonth, getProperSelectedDays } from "../util/util";
-import { Icon } from "./common/Icon";
+// import { Icon } from "./common/Icon";
+import { TfiAngleLeft, TfiAngleRight, TfiMenu } from "react-icons/tfi";
 
 const Navbar = () => {
   const {
@@ -87,37 +88,38 @@ const Navbar = () => {
     }
   }
 
-  // function renderMonthAndYear() {
-  //   if (!selectedDaysArray.length) return;
+  function renderMonthAndYear() {
+    if (!selectedDaysArray.length) return;
 
-  //   const monthOfTheFirstDay = selectedDaysArray[0].month();
-  //   const yearOfTheFirstDay = selectedDaysArray[0].year();
-  //   if (
-  //     selectedDaysArray[selectedDaysArray.length - 1].month() ===
-  //       monthOfTheFirstDay &&
-  //     selectedDaysArray[selectedDaysArray.length - 1].year() ===
-  //       yearOfTheFirstDay
-  //   ) {
-  //     return selectedDaysArray[0].format("MMMM YYYY");
-  //   } else if (
-  //     selectedDaysArray[selectedDaysArray.length - 1].month() !==
-  //       monthOfTheFirstDay &&
-  //     selectedDaysArray[selectedDaysArray.length - 1].year() ===
-  //       yearOfTheFirstDay
-  //   ) {
-  //     return (
-  //       selectedDaysArray[0].format("MMMM") +
-  //       " - " +
-  //       selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
-  //     );
-  //   } else {
-  //     return (
-  //       selectedDaysArray[0].format("MMMM YYYY") +
-  //       " - " +
-  //       selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
-  //     );
-  //   }
-  // }
+    const monthOfTheFirstDay = selectedDaysArray[0].month();
+    const yearOfTheFirstDay = selectedDaysArray[0].year();
+    if (
+      selectedDaysArray[selectedDaysArray.length - 1].month() ===
+        monthOfTheFirstDay &&
+      selectedDaysArray[selectedDaysArray.length - 1].year() ===
+        yearOfTheFirstDay
+    ) {
+      return selectedDaysArray[0].format("MMMM YYYY");
+    } else if (
+      selectedDaysArray[selectedDaysArray.length - 1].month() !==
+        monthOfTheFirstDay &&
+      selectedDaysArray[selectedDaysArray.length - 1].year() ===
+        yearOfTheFirstDay
+    ) {
+      return (
+        selectedDaysArray[0].format("MMMM") +
+        " - " +
+        selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
+      );
+    } else {
+      return (
+        selectedDaysArray[0].format("MMMM YYYY") +
+        " - " +
+        selectedDaysArray[selectedDaysArray.length - 1].format("MMMM YYYY")
+      );
+    }
+  }
+
   function handleClickShow(e: any) {
     e.preventDefault();
     toggleShowSidebar(showSidebar);
@@ -125,12 +127,8 @@ const Navbar = () => {
 
   return (
     <header className='px-4 py-2 flex items-center align-middle border rounded-lg rounded-t-none mx-1 h-[10%]'>
-      <button
-        // onClick={() => setShowSidebar(!showSidebar)}
-        onClick={handleClickShow}
-        className='w-8 h-8 cursor-pointer p-1'
-      >
-        <Icon type={"menu"} />
+      <button onClick={handleClickShow} className='w-8 h-8 cursor-pointer p-1'>
+        <TfiMenu className='font-bold' />
       </button>
       <div className='UniCal_Logo mr-1 w-12 h-12'></div>
       <h1 className='mr-10 text-xl text-gray-500 font-bold'>UniCal</h1>
@@ -147,7 +145,7 @@ const Navbar = () => {
           handleMonthIndexChangeOnSelectedDays(false);
         }}
       >
-        <Icon type={"chevron_left"} />
+        <TfiAngleLeft className='font-black' />
       </button>
       <button
         className='p-1 cursor-pointer w-8 h-8 block'
@@ -156,11 +154,10 @@ const Navbar = () => {
           handleMonthIndexChangeOnSelectedDays(true);
         }}
       >
-        <Icon type={"chevron_right"} />
+        <TfiAngleRight />
       </button>
       <h2 className=' ml-4 text-xl text-gray-500 font-bold'>
-        {/* {renderMonthAndYear()} */}
-        renderMonthAndYear
+        {renderMonthAndYear()}
       </h2>
     </header>
   );

@@ -1,7 +1,10 @@
 import dayjs from "dayjs";
 import React, { SyntheticEvent, useEffect, useState } from "react";
+import { CgClose, CgLayoutList, CgPen, CgTrashEmpty } from "react-icons/cg";
 import {
   TfiAlarmClock,
+  TfiBookmark,
+  TfiCheck,
   TfiClose,
   TfiLayoutListThumb,
   TfiList,
@@ -41,12 +44,13 @@ const EventModal = () => {
   );
 
   const [chosenGroupForTask, setChosenGroupForTask] = useState<
-    Group | undefined
+    // Group | undefined
+    Group
   >(
     // selectedEvent
     // ? savedGroups.find((group) => group.id === selectedEvent.groupId)
     // :
-    undefined
+    savedGroups[0]
   );
 
   const [editMode, setEditMode] = useState(false);
@@ -57,13 +61,13 @@ const EventModal = () => {
       setDescription(selectedEvent.description);
       setSelectedLabel(selectedEvent.label);
       setChosenGroupForTask(
-        savedGroups.find((group) => group.id === selectedEvent.groupId)
+        savedGroups.find((gr) => gr.id === selectedEvent.groupId)!
       );
     } else {
       setTitle("");
       setDescription("");
       setSelectedLabel(labelsClasses[0]);
-      setChosenGroupForTask(undefined);
+      setChosenGroupForTask(savedGroups[0]);
     }
   }, [selectedEvent, savedGroups]);
 
@@ -215,18 +219,24 @@ const EventModal = () => {
           <div>
             <header className='bg-gray-100 px-4 py-2 flex justify-end items-center'>
               <div>
-                <button onClick={() => setEditMode(true)}>
-                  <TfiPencil />
+                <button onClick={() => setEditMode(true)} className=''>
+                  <div className='flex justify-center items-center '>
+                    <CgPen className='text-gray-400 unselectable text-lg w-6 h-6  ml-1 ' />
+                  </div>
                 </button>
                 <button
                   onClick={(e) => {
                     handleDelete(e);
                   }}
                 >
-                  <TfiTrash />
+                  <div className='flex justify-center items-center h-full w-full'>
+                    <CgTrashEmpty className='text-gray-400 unselectable text-lg w-6 h-6 ml-1' />
+                  </div>
                 </button>
                 <button type='button' onClick={() => handleClose()}>
-                  <TfiClose />
+                  <div className='flex justify-center items-center h-full w-full'>
+                    <CgClose className='text-gray-400 unselectable text-lg w-6 h-6 ml-1   ' />
+                  </div>
                 </button>
               </div>
             </header>
@@ -241,7 +251,9 @@ const EventModal = () => {
                   {selectedEvent.title}
                 </p>
                 <div>
-                  <TfiList />
+                  <div className='flex justify-center items-center h-full w-full text-xl'>
+                    <CgLayoutList className='text-gray-400 unselectable text-xl' />
+                  </div>
                 </div>
                 <p className='pl-1 unselectable'>
                   {selectedEvent
@@ -324,13 +336,15 @@ const EventModal = () => {
                   maxLength={250}
                   rows={2}
                 />
-                <Icon type={"list_alt"} />
+                {/* <Icon type={"list_alt"} /> */}
+                <TfiLayoutListThumb />
                 <Dropdown
                   dropdownArray={savedGroups}
                   actionFunction={setChosenGroupForTask}
                   actionResult={chosenGroupForTask}
                 />
-                <Icon type={"bookmark_border"} />
+                {/* <Icon type={"bookmark_border"} /> */}
+                <TfiBookmark />
                 <div className='flex gap-x-2'>
                   {labelsClasses.map((lblClass, i) => (
                     <span
@@ -339,9 +353,7 @@ const EventModal = () => {
                       className={`bg-${lblClass}-500 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer `}
                     >
                       {selectedLabel === lblClass && (
-                        <span className='material-icons text-white text-sm'>
-                          check
-                        </span>
+                        <TfiCheck className='text-white text-sm' />
                       )}
                     </span>
                   ))}

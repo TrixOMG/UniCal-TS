@@ -1,9 +1,15 @@
 import React, { SyntheticEvent, useEffect, useState } from "react";
 import { usePopper } from "react-popper";
 // import { popperConfig } from "../Variables";
+import {
+  TfiBookmark,
+  TfiClose,
+  TfiLayoutListThumb,
+  TfiPencil,
+  TfiTrash,
+} from "react-icons/tfi";
 import { labelsClasses, useGlobalContext } from "../context/context";
 import "../index.css";
-import { Icon } from "./common/Icon";
 
 const GroupModal = () => {
   const {
@@ -209,17 +215,20 @@ const GroupModal = () => {
             <header className='bg-gray-100 px-4 py-2 flex justify-end items-center'>
               <div>
                 <button onClick={() => setEditMode(true)}>
-                  <Icon type={"edit"} />
+                  {/* <Icon type={"edit"} /> */}
+                  <TfiPencil />
                 </button>
                 <button
                   onClick={(e) => {
                     handleDelete(e);
                   }}
                 >
-                  <Icon type={"delete"} />
+                  {/* <Icon type={"delete"} /> */}
+                  <TfiTrash />
                 </button>
                 <button type='button' onClick={() => handleClose()}>
-                  <Icon type={"close"} />
+                  {/* <Icon type={"close"} /> */}
+                  <TfiClose />
                 </button>
               </div>
             </header>
@@ -233,7 +242,7 @@ const GroupModal = () => {
                 <p className='pl-1 pt-1 text-gray-600 text-lg font-semibold w-full pb-2'>
                   {selectedGroup.title}
                 </p>
-                {description && <Icon type={"segment"} />}
+                {description && <TfiLayoutListThumb />}
                 {description && (
                   <pre className='pl-1 whitespace-pre-wrap'>{description}</pre>
                 )}
@@ -263,7 +272,7 @@ const GroupModal = () => {
                       handleDelete(e);
                     }}
                   >
-                    <Icon type={"delete"} />
+                    <TfiTrash />
                   </button>
                 )}
                 <button
@@ -272,7 +281,7 @@ const GroupModal = () => {
                     handleClose();
                   }}
                 >
-                  <Icon type={"close"} />
+                  <TfiClose />
                 </button>
               </div>
             </header>
@@ -288,7 +297,8 @@ const GroupModal = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
-                <Icon type={"segment"} />
+                {/* <Icon type={"segment"} /> */}
+                <TfiBookmark />
                 <textarea
                   // type='text'
                   name='description'
@@ -299,7 +309,8 @@ const GroupModal = () => {
                   maxLength={100}
                   rows={2}
                 />
-                <Icon type={"bookmark_border"} />
+                {/* <Icon type={"bookmark_border"} /> */}
+                <TfiBookmark />
                 <div className='flex gap-x-2'>
                   {labelsClasses.map((lblClass, i) => (
                     <span

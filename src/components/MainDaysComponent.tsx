@@ -20,7 +20,6 @@ const MainDaysComponent = () => {
   } = useGlobalContext();
 
   useEffect(() => {
-    if (selectedDaysArray === undefined) return;
     if (selectedDaysArray.length > 0)
       setProperTimespan(getProperTimespanInMain(selectedDaysArray));
   }, [selectedDaysArray]);

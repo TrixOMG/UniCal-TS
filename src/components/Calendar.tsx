@@ -1,5 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 import React, { useEffect, useState } from "react";
+import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
 import { useGlobalContext } from "../context/context";
 import { getMonth, getProperSelectedDays } from "../util/util";
 
@@ -197,14 +198,10 @@ const Calendar = () => {
         </p>
         <div>
           <button onClick={handlePrevMonth}>
-            <span className='material-icons cursor-pointer text-gray-600 mx-2'>
-              chevron_left
-            </span>
+            <TfiAngleLeft />
           </button>
           <button onClick={handleNextMonth}>
-            <span className='material-icons cursor-pointer text-gray-600 mx-2'>
-              chevron_right
-            </span>
+            <TfiAngleRight />
           </button>
         </div>
       </header>
