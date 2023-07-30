@@ -100,7 +100,10 @@ const Timeline = () => {
     <section className='overflow-y-scroll m-1 rounded-lg'>
       {FiveMinuteSegments.map((segment, idx) => {
         return (
-          <div className='h-fit w-full bg-gray-700 my-1 rounded-lg p-1'>
+          <div
+            className='h-fit w-full bg-gray-700 my-1 rounded-lg p-1'
+            key={idx}
+          >
             Segment: {idx}
           </div>
         );
