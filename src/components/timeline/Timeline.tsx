@@ -2,7 +2,38 @@ import React from "react";
 
 const Timeline = () => {
   //TODO: create FiveMinuteSegment array variable
-  const FiveMinuteSegment = {};
+  const FiveMinuteSegments = [
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+    "123",
+  ];
 
   // function handleDragEnd({ destination, source, draggableId }) {
   // // если таск дропнули в место куда его нельзя дропнуть
@@ -66,7 +97,15 @@ const Timeline = () => {
   // }
 
   return (
-    <div>Timeline</div>
+    <section className='overflow-y-scroll m-1 rounded-lg'>
+      {FiveMinuteSegments.map((segment, idx) => {
+        return (
+          <div className='h-fit w-full bg-gray-700 my-1 rounded-lg p-1'>
+            Segment: {idx}
+          </div>
+        );
+      })}
+    </section>
     // <DragDropContext onDragEnd={handleDragEnd}>
     //   {/* <Droppable droppableId={pDay.valueOf() + ""}>
     //     {(provided) => {

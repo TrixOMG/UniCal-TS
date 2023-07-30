@@ -17,7 +17,6 @@ import { useLocalStorage } from "usehooks-ts";
 
 // import { BuiltQueryMethods } from "@testing-library/react";
 import { useOutsideAlerter } from "../hooks/useOutsideAlerter";
-import { getProperSelectedDays } from "../util/util";
 
 export const labelsClasses = [
   "indigo",
@@ -181,16 +180,6 @@ function initEvents() {
   else parsedEvents = []; // default event for testing
 
   return parsedEvents;
-}
-
-function initSelectedDaysArray() {
-  const storageDays = localStorage.getItem("selectedDaysArray");
-  let parsedDays = [];
-
-  if (storageDays !== null) parsedDays = JSON.parse(storageDays);
-  else parsedDays = [dayjs()];
-
-  return parsedDays;
 }
 
 // const defaultGroup = {

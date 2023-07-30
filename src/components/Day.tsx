@@ -51,7 +51,7 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
   }, [filteredEvents, pDay]);
 
   return (
-    <div className='border border-gray-200 flex flex-col rounded-lg'>
+    <div className='border border-gray-200 flex flex-col rounded-lg max-h-full bg-white'>
       <header
         className='flex flex-col items-center bg-gray-300 rounded-t-lg pb-1 cursor-pointer'
         onClick={() => handleAddEventClick()}

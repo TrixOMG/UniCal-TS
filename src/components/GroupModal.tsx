@@ -72,7 +72,7 @@ const GroupModal = () => {
     popperElement,
     // popperConfig
     {
-      placement: "right-start",
+      placement: "right",
       modifiers: [
         {
           name: "offset",
@@ -104,10 +104,10 @@ const GroupModal = () => {
               "left-end",
               "right-end",
               "bottom",
-              "right-start",
-              "left-start",
-              "bottom-start",
-              "top-start",
+              // "right-start",
+              // "left-start",
+              // "bottom-start",
+              // "top-start",
             ],
             rootBoundary: "viewport",
           },

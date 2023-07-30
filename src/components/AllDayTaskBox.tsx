@@ -8,7 +8,7 @@ export const AllDayTaskBox = (props: { pDay: Dayjs; dayEvents: Event[] }) => {
   const { pDay, dayEvents } = props;
 
   return (
-    <section className='border-gray-200 border-b flex flex-col rounded-b-lg'>
+    <section className='border-gray-200 border-b flex flex-col rounded-b-lg bg-white'>
       <Droppable droppableId={pDay.valueOf() + ""}>
         {(provided) => {
           return (
