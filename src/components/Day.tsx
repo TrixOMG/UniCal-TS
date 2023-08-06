@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Event, useGlobalContext } from "../context/context";
 import { AllDayTaskBox } from "./AllDayTaskBox";
 import Timeline from "./timeline/Timeline";
@@ -20,6 +20,9 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
     setSelectedDaysArray,
     setChosenDay,
     filteredEvents,
+    // RESIZABLE
+    bufferHeight,
+    // RESIZABLE
   } = useGlobalContext();
 
   function getAccentOnToday() {
@@ -51,7 +54,7 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
   }, [filteredEvents, pDay]);
 
   return (
-    <div className='border border-gray-200 flex flex-col rounded-lg max-h-full bg-white'>
+    <div className='border border-gray-200 flex flex-col rounded-lg max-h-full bg-white overflow-auto'>
       <header
         className='flex flex-col items-center bg-gray-300 rounded-t-lg pb-1 cursor-pointer'
         onClick={() => handleAddEventClick()}
@@ -82,7 +85,10 @@ const Day = (props: { pDay: Dayjs; rowIdx: number }) => {
       >
         /
       </div>
-      <AllDayTaskBox pDay={pDay} dayEvents={dayEvents} />
+      <div className='relative'>
+        <AllDayTaskBox pDay={pDay} dayEvents={dayEvents} />
+      </div>
+
       {<Timeline />}
     </div>
   );

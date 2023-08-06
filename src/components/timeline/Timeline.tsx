@@ -97,7 +97,7 @@ const Timeline = () => {
   // }
 
   return (
-    <section className='overflow-y-scroll m-1 rounded-lg'>
+    <section className='overflow-y-auto m-1 rounded-lg'>
       {FiveMinuteSegments.map((segment, idx) => {
         return (
           <div

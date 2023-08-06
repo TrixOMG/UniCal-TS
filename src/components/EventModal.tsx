@@ -212,7 +212,7 @@ const EventModal = () => {
   }
 
   return (
-    <div ref={modalRef}>
+    <div ref={modalRef} className='z-99'>
       <div
         className={`${getClassShow()} rounded-xl drop-shadow-lg overflow-hidden bg-white`}
         ref={setPopperElement}

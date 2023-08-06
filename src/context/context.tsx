@@ -40,6 +40,10 @@ export interface GlobalContextProps {
   deleteGroup: (groupId: number) => void;
 
   // LOCAL STORAGE END
+  // RESIZABLE
+  bufferHeight: number;
+  setBufferHeight: Dispatch<SetStateAction<number>>;
+  // RESIZABLE
   tooltipTitle: string;
   setTooltipTitle: Dispatch<SetStateAction<string>>;
   tooltipRefElement: HTMLElement | null;
@@ -244,6 +248,10 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   const [showCancelButton, setShowCancelButton] = useState<boolean>(true);
   const [objectForAction, setObjectForAction] = useState({});
 
+  // RESIZABLE
+  const [bufferHeight, setBufferHeight] = useState(100);
+  // RESIZABLE
+
   // groups
   // const [savedGroups, dispatchGroups] = useReducer(
   //   groupsReducer,
@@ -366,6 +374,11 @@ export const GlobalContextProvider = (props: { children: React.ReactNode }) => {
   );
 
   const value: GlobalContextProps = {
+    // RESIZABLE
+    bufferHeight,
+    setBufferHeight,
+    // RESIZABLE
+
     //tooltip
     tooltipTitle,
     setTooltipTitle,
